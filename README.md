@@ -9,31 +9,31 @@ Deployment tool
     directory and make it executable.
 
     ```sh
-    $ curl -L http://deployer.org/deployer.phar -o deployer.phar
-    $ mv deployer.phar /usr/local/bin/dep
-    $ chmod +x /usr/local/bin/dep
+    ➜ $ curl -L http://deployer.org/deployer.phar -o deployer.phar
+    ➜ mv deployer.phar /usr/local/bin/dep
+    ➜ chmod +x /usr/local/bin/dep
     ```
 ### Install
 
 Clone this repository
 
 ```bash
-$ git clone git@github.com:swissup/deployer.git
-$ cd deployer
+➜ git clone git@github.com:swissup/deployer.git
+➜ cd deployer
 ```
 ### Usage
 
 #### List releasses
 
 ~~~
-➜  shell git:(master) dep releases:list 
-➜  shell git:(master) dep releases:list -vv
+➜ dep releases:list 
+➜ dep releases:list -vv
 ~~~
 
 #### Clear all
 
 ~~~
-➜  shell git:(master) dep releases:cleanup:all
+➜ dep releases:cleanup:all
 ~~~
 
 #### Test magento 1 deploy

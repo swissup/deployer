@@ -20,13 +20,21 @@ Clone this repository
 ```bash
 ➜ git clone git@github.com:swissup/deployer.git
 ➜ cd deployer
+➜ cp hosts.yml.example hosts.yml
 ```
+Add your credentials to hosts.yml
+
+Check
+```bash
+➜ dep ssh
+```
+
 ### Usage
 
 #### List releasses
 
 ~~~
-➜ dep releases:list 
+➜ dep releases:list
 ➜ dep releases:list -vv
 ~~~
 
@@ -48,7 +56,7 @@ Clone this repository
 ~~~
 ➜ dep magento2:create --packages=swissup/ajaxpro,swissup/ajaxlayerednavigation,swissup/firecheckout,swissup/askit,swissup/testimonials,swissup/sold-together,swissup/rich-snippets,swissup/reviewreminder,swissup/pro-labels,swissup/highlight,swissup/fblike,swissup/easytabs,swissup/easy-slide,swissup/easyflags,swissup/easycatalogimg,swissup/easybanner,swissup/attributepages,swissup/ajaxsearch,swissup/address-field-manager -v
 
-➜ dep magento2:releases:list 
+➜ dep magento2:releases:list
 
 ➜ dep magento2:skeleton:create --packages=swissup/ajaxpro,swissup/ajaxlayerednavigation,swissup/firecheckout,swissup/askit,swissup/testimonials,swissup/sold-together,swissup/rich-snippets,swissup/reviewreminder,swissup/pro-labels,swissup/highlight,swissup/fblike,swissup/easytabs,swissup/easy-slide,swissup/easyflags,swissup/easycatalogimg,swissup/easybanner,swissup/attributepages,swissup/ajaxsearch,swissup/address-field-manager -v
 ➜ dep magento2:skeleton:summon --modules=Swissup_Core,Swissup_Askit
@@ -84,7 +92,7 @@ Clone this repository
     ➜  make
     ➜  sudo make install
     ```
-3. Download and install n98-magerun     
+3. Download and install n98-magerun
 
     ```sh
     ➜  wget http://files.magerun.net/n98-magerun-latest.phar -O n98-magerun.phar

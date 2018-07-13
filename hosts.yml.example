@@ -1,0 +1,13 @@
+swissupdemo.com:
+  host: swissupdemo.com
+  user: ec2-user
+  port: 22
+  identityFile: ~/.ssh/key.pem
+  forwardAgent: true
+  multiplexing: true
+  stage: production
+  deploy_path: /var/www/html
+  mysql_user: user
+  mysql_pass: pass
+  base_url: http://swissupdemo.com
+  writable_use_sudo: true

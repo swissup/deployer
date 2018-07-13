@@ -63,8 +63,15 @@ Check
 ➜ dep magento2:skeleton:summon --packages=swissup/ajaxpro
 ~~~
 
-### On Remote (deployment) machine
-1. Install Composer
+### Remote server system requirements
+
+1. Ssh server
+
+2. Magento requirements
+   - [Magento 1 technology stack requirements](https://docs.magento.com/m1/ce/user_guide/magento/system-requirements.html)
+   - [Magento 2.2.x technology stack requirements](https://devdocs.magento.com/guides/v2.2/install-gde/system-requirements-tech.html)
+
+3. Install Composer (optional)
     Download the [`composer.phar`](https://getcomposer.org/composer.phar) executable or use the installer.
 
     ```sh
@@ -78,7 +85,7 @@ Check
     ➜ php -r "readfile('https://getcomposer.org/installer');" | php
     ```
 
-2. Download and install jq
+4. Download and install jq (optional)
 
     ```sh
     ➜  sudo yum install jq
@@ -92,7 +99,7 @@ Check
     ➜  make
     ➜  sudo make install
     ```
-3. Download and install n98-magerun
+5. Download and install n98-magerun (optional)
 
     ```sh
     ➜  wget http://files.magerun.net/n98-magerun-latest.phar -O n98-magerun.phar

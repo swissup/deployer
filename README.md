@@ -17,10 +17,10 @@ Deployment tool
 
 Clone this repository
 
-    ```sh
-    $ git clone git@github.com:swissup/deployer.git
-    $ cd deployer
-    ```
+```bash
+$ git clone git@github.com:swissup/deployer.git
+$ cd deployer
+```
 ### Usage
 
 #### List releasses
@@ -33,12 +33,12 @@ Clone this repository
 #### Clear all
 
 ~~~
-➜  shell git:(master) dep flush:all
+➜  shell git:(master) dep releases:cleanup:all
 ~~~
 
 #### Test magento 1 deploy
 ~~~
-> dep magento --packages=tm/ajax-pro:\*,tm/ajax-layered-navigation:\*,tm/ajax-search:\*,tm/ask-it:\*,tm/easy-banner:\*,tm/helpdesk:\*,tm/navigation-pro:\*,tm/cache:\*,tm/highlight:\*,tm/pro-labels:\*,tm/review-reminder:\*,tm/sold-together:\*
+> dep magento:create --packages=tm/ajax-pro:\*,tm/ajax-layered-navigation:\*,tm/ajax-search:\*,tm/ask-it:\*,tm/easy-banner:\*,tm/helpdesk:\*,tm/navigation-pro:\*,tm/cache:\*,tm/highlight:\*,tm/pro-labels:\*,tm/review-reminder:\*,tm/sold-together:\*
 
 >dep magento2:releases:list
 ~~~
@@ -50,7 +50,7 @@ Clone this repository
 
 dep magento2:releases:list 
 
-dep magento2:skeleton:cron --packages=swissup/ajaxpro,swissup/ajaxlayerednavigation,swissup/firecheckout,swissup/askit,swissup/testimonials,swissup/sold-together,swissup/rich-snippets,swissup/reviewreminder,swissup/pro-labels,swissup/highlight,swissup/fblike,swissup/easytabs,swissup/easy-slide,swissup/easyflags,swissup/easycatalogimg,swissup/easybanner,swissup/attributepages,swissup/ajaxsearch,swissup/address-field-manager -v
+dep magento2:skeleton:create --packages=swissup/ajaxpro,swissup/ajaxlayerednavigation,swissup/firecheckout,swissup/askit,swissup/testimonials,swissup/sold-together,swissup/rich-snippets,swissup/reviewreminder,swissup/pro-labels,swissup/highlight,swissup/fblike,swissup/easytabs,swissup/easy-slide,swissup/easyflags,swissup/easycatalogimg,swissup/easybanner,swissup/attributepages,swissup/ajaxsearch,swissup/address-field-manager -v
 dep magento2:skeleton:summon --modules=Swissup_Core,Swissup_Askit
 dep magento2:skeleton:summon --packages=swissup/ajaxpro
 ~~~

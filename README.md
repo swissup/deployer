@@ -31,6 +31,27 @@ Check
 
 ### Usage
 
+#### Create magento 1
+~~~
+➜ dep magento:create
+➜ dep magento:create --packages=tm/ajax-pro:\*,tm/ajax-layered-navigation:\*,tm/ajax-search:\*,tm/ask-it:\*,tm/easy-banner:\*,tm/helpdesk:\*,tm/navigation-pro:\*,tm/cache:\*,tm/highlight:\*,tm/pro-labels:\*,tm/review-reminder:\*,tm/sold-together:\*
+
+➜ dep magento2:releases:list
+~~~
+
+
+#### Create magento 2
+~~~
+➜ dep magento2:create
+➜ dep magento2:create --packages=swissup/ajaxpro,swissup/ajaxlayerednavigation,swissup/firecheckout,swissup/askit,swissup/testimonials,swissup/sold-together,swissup/rich-snippets,swissup/reviewreminder,swissup/pro-labels,swissup/highlight,swissup/fblike,swissup/easytabs,swissup/easy-slide,swissup/easyflags,swissup/easycatalogimg,swissup/easybanner,swissup/attributepages,swissup/ajaxsearch,swissup/address-field-manager -v
+
+➜ dep magento2:releases:list
+
+➜ dep magento2:skeleton:create --packages=swissup/ajaxpro,swissup/ajaxlayerednavigation,swissup/firecheckout,swissup/askit,swissup/testimonials,swissup/sold-together,swissup/rich-snippets,swissup/reviewreminder,swissup/pro-labels,swissup/highlight,swissup/fblike,swissup/easytabs,swissup/easy-slide,swissup/easyflags,swissup/easycatalogimg,swissup/easybanner,swissup/attributepages,swissup/ajaxsearch,swissup/address-field-manager -v
+➜ dep magento2:skeleton:summon --modules=Swissup_Core,Swissup_Askit
+➜ dep magento2:skeleton:summon --packages=swissup/ajaxpro
+~~~
+
 #### List releasses
 
 ~~~
@@ -44,25 +65,6 @@ Check
 ➜ dep releases:cleanup:all
 ~~~
 
-#### Test magento 1 deploy
-~~~
-➜ dep magento:create --packages=tm/ajax-pro:\*,tm/ajax-layered-navigation:\*,tm/ajax-search:\*,tm/ask-it:\*,tm/easy-banner:\*,tm/helpdesk:\*,tm/navigation-pro:\*,tm/cache:\*,tm/highlight:\*,tm/pro-labels:\*,tm/review-reminder:\*,tm/sold-together:\*
-
-➜ dep magento2:releases:list
-~~~
-
-
-#### Test magento 2 deploying
-~~~
-➜ dep magento2:create --packages=swissup/ajaxpro,swissup/ajaxlayerednavigation,swissup/firecheckout,swissup/askit,swissup/testimonials,swissup/sold-together,swissup/rich-snippets,swissup/reviewreminder,swissup/pro-labels,swissup/highlight,swissup/fblike,swissup/easytabs,swissup/easy-slide,swissup/easyflags,swissup/easycatalogimg,swissup/easybanner,swissup/attributepages,swissup/ajaxsearch,swissup/address-field-manager -v
-
-➜ dep magento2:releases:list
-
-➜ dep magento2:skeleton:create --packages=swissup/ajaxpro,swissup/ajaxlayerednavigation,swissup/firecheckout,swissup/askit,swissup/testimonials,swissup/sold-together,swissup/rich-snippets,swissup/reviewreminder,swissup/pro-labels,swissup/highlight,swissup/fblike,swissup/easytabs,swissup/easy-slide,swissup/easyflags,swissup/easycatalogimg,swissup/easybanner,swissup/attributepages,swissup/ajaxsearch,swissup/address-field-manager -v
-➜ dep magento2:skeleton:summon --modules=Swissup_Core,Swissup_Askit
-➜ dep magento2:skeleton:summon --packages=swissup/ajaxpro
-~~~
-
 ### Remote server system requirements
 
 1. Ssh server
@@ -72,7 +74,8 @@ Check
    - [Magento 2.2.x technology stack requirements](https://devdocs.magento.com/guides/v2.2/install-gde/system-requirements-tech.html)
 
 3. Install Composer (optional)
-    Download the [`composer.phar`](https://getcomposer.org/composer.phar) executable or use the installer.
+
+   Download the [`composer.phar`](https://getcomposer.org/composer.phar) executable or use the installer.
 
     ```sh
     ➜  curl -sS https://getcomposer.org/installer | php

@@ -18,9 +18,21 @@ set('magento_repository', 'git@github.com:OpenMage/magento-mirror.git');
 // set('magento_repository', 'git@github.com:colinmollenhour/magento-lite.git');
 // set('magento_repository', 'git@github.com:speedupmate/Magento-CE-Mirror.git');
 
-set('sample_data_dir', 'magento-sample-data-1.9.1.0');
-set('sample_data_override_dirs', ['skin', 'media']);
-// set('sample_data_copy_dirs', ['media']);
+set('magento_sample_data', function () {
+    $samplePath = 'magento-sample-data-1.9.1.0';
+    if (test("[ ! -d {{deploy_path}}/$samplePath ]")) {
+        run("mkdir -p {{deploy_path}}/$samplePath");
+        run("cd {{deploy_path}} && wget https://raw.githubusercontent.com/Vinai/compressed-magento-sample-data/1.9.1.0/compressed-magento-sample-data-1.9.1.0.tgz");
+        run(
+            "cd {{deploy_path}} "
+            . "&& tar -xf compressed-magento-sample-data-1.9.1.0.tgz "
+            . " && rm -rf compressed-magento-sample-data-1.9.1.0.tgz"
+        );
+    }
+    return $samplePath;
+});
+
+set('magento_sample_data_override_dirs', ['skin', 'media']);
 set('magento_sample_data_sql_file', 'magento_sample_data_for_1.9.1.0.sql');
 
 set('magento_repository_last_tag', function () {
@@ -145,7 +157,7 @@ task('magento:release:git:clone', function () {
 
 // task('magento:shared', function () {
 //     $sharedPath = "{{deploy_path}}/shared";
-//     $samplePath = get('sample_data_dir');
+//     $samplePath = get('magento_sample_data');
 //     $sampleDataCopyDirs = get('sample_data_copy_dirs');
 //     foreach (get('shared_dirs') as $dir) {
 //         //copy sample data [media]
@@ -164,9 +176,9 @@ task('magento:release:git:clone', function () {
 
 desc('Copys sample data (media)');
 task('magento:release:sampledata:dir', function () {
-    $samplePath = get('sample_data_dir');
+    $samplePath = get('magento_sample_data');
 
-    $dirs = get('sample_data_override_dirs');//['skin'];
+    $dirs = get('magento_sample_data_override_dirs');//['skin'];
     foreach ($dirs as $dir) {
     //Copy directory
         run("if [ -d $(echo {{deploy_path}}/$samplePath/$dir) ]; "
@@ -195,7 +207,7 @@ task('magento:release:sampledata:db', function () {
     run("{{bin/mysql}} -Bse 'DROP DATABASE IF EXISTS $databaseName;'");
     run("{{bin/mysql}} -Bse 'CREATE DATABASE $databaseName;'");
     // writeln("<info> Success db create <comment>" . $databaseName . "</comment></info>");
-    $samplePath = get('sample_data_dir');
+    $samplePath = get('magento_sample_data');
     $sqlFile = get('magento_sample_data_sql_file');
     run("{{bin/mysql}} $databaseName < {{deploy_path}}/$samplePath/$sqlFile 1>&2");
 

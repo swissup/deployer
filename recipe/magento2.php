@@ -4,6 +4,7 @@ namespace Deployer;
 require_once 'recipe/common.php';
 require_once __DIR__ . '/bin/composer.php';
 require_once __DIR__ . '/bin/magento.php';
+require_once __DIR__ . '/bin/magerun2.php';
 require_once __DIR__ . '/bin/mysql.php';
 require_once __DIR__ . '/bin/jq.php';
 require_once __DIR__ . '/bin/sudo.php';

@@ -44,7 +44,8 @@ task('release:set', function () {
         $list = get('releases_list_all');
         if (in_array($release, $list)) {
             $releaseDir = get('deploy_path') . "/releases/$release";
-            run("cd {{deploy_path}} && {{bin/symlink}} $releaseDir current");
+            // run("cd {{deploy_path}} && {{bin/symlink}} $releaseDir current");
+            set('release_path', $releaseDir);
         } else {
             writeln("<error>Wrong release option value $release</error>");
         }

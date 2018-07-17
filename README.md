@@ -62,7 +62,17 @@ Check
 #### Clear all
 
 ~~~
-➜ dep releases:cleanup:all
+➜ dep releases:remove:all
+~~~
+
+#### Back up & Rool back
+
+~~~
+➜ dep magento:backup --release=193900000000000000
+➜ dep magento:snapshot:list --release=193900000000000000
+1531827423 | 2018-07-17 14:37:03
+➜ dep magento:rollback --release=193900000000000000 --snapshot=1531827423
+➜ dep magento:rollback --release=193900000000000000
 ~~~
 
 ### Remote server system requirements

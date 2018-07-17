@@ -13,7 +13,7 @@ task('magento:backup', function () {
         run("mkdir -p {{release_path}}/var/backups");
     }
     $timestamp = time();//date('YmdHis');
-    writeln(run("cd {{release_path}} && {{bin/magerun}} db:dump --strip=\"@stripped\" var/backups/{$timestamp}_db.sql"));
+    writeln(run("cd {{release_path}} && {{bin/magerun}} db:dump --quiet --strip=\"@stripped\" var/backups/{$timestamp}_db.sql"));
     writeln(run("cd {{release_path}} && echo {$timestamp} >> README.md"));
     writeln(run('cd {{release_path}} && {{bin/git}} add .'));
     writeln(run("cd {{release_path}} && {{bin/git}} commit -a -m \"Add code restore point: {$timestamp}\""));
@@ -70,7 +70,7 @@ task('magento:rollback', function () {
     }
     writeln($snapshot);
 
-    writeln(run("cd {{release_path}} && {{bin/magerun}} db:import var/backups/{$snapshot}_db.sql"));
+    writeln(run("cd {{release_path}} && {{bin/magerun}} db:import --quiet var/backups/{$snapshot}_db.sql"));
     writeln(run("cd {{release_path}} && {{bin/git}} checkout snapshot.{$snapshot}"));
 });
 before('magento:rollback', 'release:set');

@@ -16,7 +16,7 @@ task('magento2:backup', function () {
     // writeln(run('cd {{release_path}} && {{bin/magerun2}} setup:backup --db '));
     // writeln(run('cd {{release_path}} && {{bin/magerun2}} setup:backup --media'));
     $timestamp = time();//date('YmdHis');
-    writeln(run("cd {{release_path}} && {{bin/magerun2}} db:dump --strip=\"@stripped\" var/backups/{$timestamp}_db.sql"));
+    writeln(run("cd {{release_path}} && {{bin/magerun2}} db:dump --quiet --strip=\"@stripped\" var/backups/{$timestamp}_db.sql"));
     writeln(run("cd {{release_path}} && echo {$timestamp} >> README.md"));
     writeln(run('cd {{release_path}} && {{bin/git}} add .'));
     writeln(run("cd {{release_path}} && {{bin/git}} commit -a -m \"Add code restore point: {$timestamp}\""));
@@ -79,7 +79,7 @@ task('magento2:rollback', function () {
     // writeln(run('cd {{release_path}} && {{bin/magerun2}} setup:rollback --db-file=' . $snapshot . '_db.sql'));
     // writeln(run('cd {{release_path}} && {{bin/magerun2}} setup:rollback --code-file=' . $snapshot . '_filesystem_code.tgz'));
     // writeln(run('cd {{release_path}} && {{bin/magerun2}} setup:rollback --media-file=' . $snapshot . '_filesystem_media.tgz'));
-    writeln(run("cd {{release_path}} && {{bin/magerun2}} db:import var/backups/{$snapshot}_db.sql"));
+    writeln(run("cd {{release_path}} && {{bin/magerun2}} db:import --quiet var/backups/{$snapshot}_db.sql"));
     writeln(run("cd {{release_path}} && {{bin/git}} checkout snapshot.{$snapshot}"));
 });
 before('magento2:rollback', 'release:set');

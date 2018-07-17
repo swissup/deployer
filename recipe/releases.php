@@ -162,3 +162,20 @@ task('releases:remove:all:db', function () {
 })->setPrivate();
 
 after('releases:remove:all', 'releases:remove:all:db');
+
+desc("Remove release (required --release=[RELEASE])");
+task('releases:remove', function () {
+    $release = input()->getOption('release');
+
+    run("{{bin/sudo}} rm -rf {{deploy_path}}/releases/$release");
+
+    $db = "db$release";
+    $dbs = get('get_all_databases');
+    if (in_array($db, $dbs)) {
+        run("{{bin/mysql}} -Bse 'drop database $db'");
+    }
+
+    run("cd {{deploy_path}} && if [ -e release ]; then rm release; fi");
+    run("cd {{deploy_path}} && if [ -h release ]; then rm release; fi");
+});
+before('releases:remove', 'release:set');

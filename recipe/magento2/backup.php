@@ -20,69 +20,66 @@ task('magento2:backup', function () {
     writeln(run("cd {{release_path}} && echo {$timestamp} >> README.md"));
     writeln(run('cd {{release_path}} && {{bin/git}} add .'));
     writeln(run("cd {{release_path}} && {{bin/git}} commit -a -m \"Add code restore point: {$timestamp}\""));
-    writeln(run("cd {{release_path}} && {{bin/git}} tag rollback.{$timestamp}"));
+    writeln(run("cd {{release_path}} && {{bin/git}} tag snapshot.{$timestamp}"));
 });
 before('magento2:backup', 'release:set');
 
-set('magento2_backup_list', function () {
-    $backups = run("cd {{release_path}} && ls var/backups/*_db.sql | awk '{print $1}'");
-    $backups = array_filter(explode("\n", $backups));
+set('magento2_snapshot_list', function () {
+    $snapshots = run("cd {{release_path}} && ls var/backups/*_db.sql | awk '{print $1}'");
+    $snapshots = array_filter(explode("\n", $snapshots));
 
     $_backups = array();
-    foreach ($backups as $path) {
-        list($backup, ) = explode('_', basename($path));
-        $_backups[] = $backup;
+    foreach ($snapshots as $path) {
+        list($snapshot, ) = explode('_', basename($path));
+        $_backups[] = $snapshot;
     }
 
     return $_backups;
 });
 
 desc('List backups');
-task('magento2:backup:list', function () {
+task('magento2:snapshot:list', function () {
     // writeln(run('cd {{release_path}} && {{bin/magento}} info:backups:list'));
     // writeln(run("cd {{release_path}} && ls var/backups/*_db.sql | awk '{print $1}'"));
-    $backups = get('magento2_backup_list');
-    foreach ($backups as $backup) {
-        writeln($backup . ' | ' . date('Y-m-d H:i:s', $backup));
+    $snapshots = get('magento2_snapshot_list');
+    foreach ($snapshots as $snapshot) {
+        writeln($snapshot . ' | ' . date('Y-m-d H:i:s', $snapshot));
     }
 });
-before('magento2:backup:list', 'release:set');
+before('magento2:snapshot:list', 'release:set');
 
 option(
-    'rollback',
+    'snapshot',
     null,
     \Symfony\Component\Console\Input\InputOption::VALUE_OPTIONAL,
-    'Set rollback point.'
+    'Set snapshot point.'
 );
 
 desc('Roll back');
 task('magento2:rollback', function () {
 
-    $rollback = input()->getOption('rollback');
-    if (empty($rollback)) {
-        writeln("<info>magento2:backup:list - show all backup</info>");
-        $rollback = false;
-        $backups = get('magento2_backup_list');
-        foreach ($backups as $backup) {
-            if ($backup > $rollback) {
-                $rollback = $backup;
+    $snapshot = input()->getOption('snapshot');
+    if (empty($snapshot)) {
+        writeln("<info>magento2:snapshot:list - show all backup</info>");
+        $snapshot = false;
+        $snapshots = get('magento2_snapshot_list');
+        foreach ($snapshots as $_snapshot) {
+            if ($_snapshot > $snapshot) {
+                $snapshot = $_snapshot;
             }
         }
     }
 
-    if (empty($rollback)) {
-        writeln("<error>That task required option --roolback=[BACKUP]</error>");
+    if (empty($snapshot)) {
+        writeln("<error>That task required option --snapshot=[SNAPSHOT]</error>");
         return;
     }
-    writeln($rollback);
+    writeln($snapshot);
 
-    // writeln(run('cd {{release_path}} && {{bin/magerun2}} setup:rollback --db-file=' . $rollback . '_db.sql'));
-    // writeln(run('cd {{release_path}} && {{bin/magerun2}} setup:rollback --code-file=' . $rollback . '_filesystem_code.tgz'));
-    // writeln(run('cd {{release_path}} && {{bin/magerun2}} setup:rollback --media-file=' . $rollback . '_filesystem_media.tgz'));
-    writeln(run("cd {{release_path}} && {{bin/magerun2}} db:import var/backups/{$rollback}_db.sql"));
-    writeln(run("cd {{release_path}} && {{bin/git}} checkout rollback.{$rollback}"));
+    // writeln(run('cd {{release_path}} && {{bin/magerun2}} setup:rollback --db-file=' . $snapshot . '_db.sql'));
+    // writeln(run('cd {{release_path}} && {{bin/magerun2}} setup:rollback --code-file=' . $snapshot . '_filesystem_code.tgz'));
+    // writeln(run('cd {{release_path}} && {{bin/magerun2}} setup:rollback --media-file=' . $snapshot . '_filesystem_media.tgz'));
+    writeln(run("cd {{release_path}} && {{bin/magerun2}} db:import var/backups/{$snapshot}_db.sql"));
+    writeln(run("cd {{release_path}} && {{bin/git}} checkout snapshot.{$snapshot}"));
 });
 before('magento2:rollback', 'release:set');
-
-desc('List backups');
-task('magento2:rollback:list', ['magento2:backup:list']);

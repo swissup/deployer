@@ -107,15 +107,6 @@ task('magento:release:deploy', function () {
     run("cd {{deploy_path}} && {{bin/symlink}} $releasePath release");
 })->setPrivate();
 
-desc('List all magento releases');
-task('magento:releases:list', function () {
-    $releases = get('magento_releases_list');
-    if (!empty($releases)) {
-        $releases = implode("\n", $releases);
-        writeln("$releases");
-    }
-});
-
 /**
  * Update project code
  */
@@ -412,6 +403,15 @@ task('magento:release:deploy:symlink', function () {
     run("cd {{deploy_path}} && if [ -h release ]; then rm release; fi");
     // run("cd {{deploy_path}} && rm release"); // Remove release link.
 })->setPrivate();
+
+desc('List all magento releases');
+task('magento:releases:list', function () {
+    $releases = get('magento_releases_list');
+    if (!empty($releases)) {
+        $releases = implode("\n", $releases);
+        writeln("$releases");
+    }
+});
 
 /**
  * Main task

@@ -6,6 +6,7 @@ require 'recipe/common.php';
 
 require_once __DIR__ . '/../magento1.php';
 
+desc('Backing up');
 task('magento:backup', function () {
     if (test("[ ! -d {{release_path}}/var/backups ]")) {
         run("mkdir -p {{release_path}}/var/backups");
@@ -19,10 +20,22 @@ task('magento:backup', function () {
 });
 before('magento:backup', 'release:set');
 
-task('magento:backup:list', function () {
+set('magento_backup_list', function () {
     $backups = run("cd {{release_path}} && ls var/backups/*_db.sql | awk '{print $1}'");
-    foreach (explode("\n", $backups) as $path) {
+    $backups = array_filter(explode("\n", $backups));
+    $_backups = array();
+    foreach ($backups as $path) {
         list($backup, ) = explode('_', basename($path));
+        $_backups[] = $backup;
+    }
+
+    return $_backups;
+});
+
+desc('List backups');
+task('magento:backup:list', function () {
+    $backups = get('magento_backup_list');
+    foreach ($backups as $backup) {
         writeln($backup . '  ' . date('Y-m-d H:i:s', $backup));
     }
 });
@@ -34,17 +47,32 @@ option(
     \Symfony\Component\Console\Input\InputOption::VALUE_OPTIONAL,
     'Set rollback point.'
 );
+
+desc('Roll back');
 task('magento:rollback', function () {
 
     $rollback = input()->getOption('rollback');
     if (empty($rollback)) {
-        writeln("<error>That task required option --roolback=[BACKUP]</error>");
         writeln("<info>magento:backup:list - show all backup</info>");
+        $rollback = false;
+        $backups = get('magento_backup_list');
+        foreach ($backups as $backup) {
+            if ($backup > $rollback) {
+                $rollback = $backup;
+            }
+        }
+    }
+
+    if (empty($rollback)) {
+        writeln("<error>That task required option --roolback=[BACKUP]</error>");
         return;
     }
+    writeln($rollback);
+
     writeln(run("cd {{release_path}} && {{bin/magerun}} db:import var/backups/{$rollback}_db.sql"));
     writeln(run("cd {{release_path}} && {{bin/git}} checkout rollback.{$rollback}"));
 });
 before('magento:rollback', 'release:set');
 
+desc('List backups');
 task('magento:rollback:list', ['magento:backup:list']);

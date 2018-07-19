@@ -135,6 +135,9 @@ task('magento2:release:git:clone', function () {
         $at = "-b $tag";
     } elseif (!empty($branch)) {
         $at = "-b $branch";
+    } else {
+        $tag = get('magento2_repository_last_tag');
+        $at = "-b $tag";
     }
     $releases = get('magento2_releases_list');
     if ($gitCache && isset($releases[1])) {

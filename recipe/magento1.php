@@ -127,6 +127,9 @@ task('magento:release:git:clone', function () {
         $at = "-b $tag";
     } elseif (!empty($branch)) {
         $at = "-b $branch";
+    } else {
+        $tag = get('magento_repository_last_tag');
+        $at = "-b $tag";
     }
 
     $releases = get('magento_releases_list');
@@ -142,6 +145,9 @@ task('magento:release:git:clone', function () {
     } else {
         //run("{{bin/git}} clone $at $depth --recursive -q $repository {{release_path}} 2>&1");
         run("{{bin/git}} clone -q $repository {{release_path}} 2>&1");
+    }
+    if (!empty($tag)) {
+        run("cd {{release_path}} && {{bin/git}} checkout $tag");
     }
     run("cd {{release_path}} && {{bin/git}} config core.fileMode false");
 })->setPrivate();

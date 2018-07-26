@@ -30,8 +30,7 @@ set('magento2_repository_last_tag', function () {
     $tag = end($tags);
     list(, $tag) = explode('refs/tags/', $tag);
     list($tag, ) = explode('-', $tag);
-    $tag = str_replace('.', '', $tag);
-    $tag = str_pad($tag, 4, '0');
+
     return  $tag;
 });
 
@@ -101,6 +100,9 @@ task('magento2:release:deploy', function () {
     if (empty($tag)) {
         $tag = get('magento2_repository_last_tag');
     }
+    $tag = str_replace('.', '', $tag);
+    $tag = str_pad($tag, 4, '0');
+
     $release = $tag . date('YmdHis');
     $releasePath = "{{deploy_path}}/releases/$release";
     $i = 0;

@@ -90,20 +90,26 @@ task('magento2:release:check', function () {
 
 desc('Prepare magento 2 release place');
 task('magento2:release:deploy', function () {
-    if (input()->hasOption('tag')) {
-        $tag = input()->getOption('tag');
-        if (!empty($tag)) {
-            $tag = str_replace('.', '', $tag);
-            $tag = str_pad($tag, 4, '0');
+    if (input()->hasOption('release')) {
+        $release = input()->getOption('release');
+    } else {
+        if (input()->hasOption('tag')) {
+            $tag = input()->getOption('tag');
+            if (!empty($tag)) {
+                $tag = str_replace('.', '', $tag);
+                $tag = str_pad($tag, 4, '0');
+            }
         }
-    }
-    if (empty($tag)) {
-        $tag = get('magento2_repository_last_tag');
-    }
-    $tag = str_replace('.', '', $tag);
-    $tag = str_pad($tag, 4, '0');
+        if (empty($tag)) {
+            $tag = get('magento2_repository_last_tag');
+        }
+        $tag = str_replace('.', '', $tag);
+        $tag = str_pad($tag, 4, '0');
 
-    $release = $tag . date('YmdHis');
+        $release = $tag . date('YmdHis');
+    }
+    $release = preg_replace("/[^A-Za-z0-9 ]/", '', $release);
+
     $releasePath = "{{deploy_path}}/releases/$release";
     $i = 0;
     // while (is_dir(env()->parse($releasePath)) && $i < 42) {

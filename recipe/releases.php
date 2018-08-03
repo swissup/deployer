@@ -96,10 +96,8 @@ desc('Cleaning up old releases first ' . get('keep_releases'));
 task('releases:remove:old', function () {
     $releases = get('releases_list_all');
     $keep = get('keep_releases');
-    while ($keep > 0) {
-        array_shift($releases);
-        --$keep;
-    }
+
+    $releases = array_slice($releases, $keep);
     $dbs = get('get_all_databases');
     foreach ($releases as $release) {
         run("{{bin/sudo}} rm -rf {{deploy_path}}/releases/$release");
@@ -147,7 +145,7 @@ task('releases:remove:all', function () {
 desc("Remove skeleton and release dirs");
 task('releases:remove:resources', function () {
     run("cd {{deploy_path}} && {{bin/sudo}} rm -rf skeleton release ");
-})->setPrivate();
+});//->setPrivate();
 
 after('releases:remove:all', 'releases:remove:resources');
 

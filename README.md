@@ -1,6 +1,12 @@
 # Deployer
 Deployment tool
 
+### Example:
+
+<p align="center">
+  <a href="https://rawgit.com/swissup/deployer/master/example.svg"><img width="700" src="https://rawgit.com/swissup/deployer/example.svg"></a>
+</p>
+
 ### Pre-Install
 
 #### On local machine

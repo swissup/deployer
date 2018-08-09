@@ -30,21 +30,31 @@ Clone this repository
 ```
 Add your credentials to hosts.yml
 
-Check
+```yml
+store.com:
+  host: store.com
+  user: ec2-user
+  password: pass
+  port: 22
+  identityFile: ~/.ssh/key.pem
+  forwardAgent: true
+  multiplexing: true
+  stage: production
+  deploy_path: /var/www/html
+  mysql_user: user
+  mysql_pass: pass
+  base_url: http://swissupdemo.com
+  writable_use_sudo: true
+  add_sample_data: true
+```
+
+Check your ssh connection
+
 ```bash
 ➜ dep ssh
 ```
 
 ### Usage
-
-#### Create magento 1
-~~~
-➜ dep magento:create
-➜ dep magento:create --packages=tm/ajax-pro:\*,tm/ajax-layered-navigation:\*,tm/ajax-search:\*,tm/ask-it:\*,tm/easy-banner:\*,tm/helpdesk:\*,tm/navigation-pro:\*,tm/cache:\*,tm/highlight:\*,tm/pro-labels:\*,tm/review-reminder:\*,tm/sold-together:\*
-
-➜ dep magento2:releases:list
-~~~
-
 
 #### Create magento 2
 ~~~
@@ -57,6 +67,32 @@ Check
 ➜ dep magento2:skeleton:summon --modules=Swissup_Core,Swissup_Askit
 ➜ dep magento2:skeleton:summon --packages=swissup/ajaxpro
 ~~~
+
+Configure your server to serve files from the current folder. For example if you are using [nginx](https://github.com/magento/magento2/blob/2.2-develop/nginx.conf.sample#L11) next:
+
+~~~conf
+
+server {
+    listen 80;
+    server_name mage.dev;
+    set $MAGE_ROOT /var/www/html/current;
+    include /vagrant/magento2/nginx.conf.sample;
+}
+
+~~~
+
+Now you will be able to serve your project
+
+
+#### Create magento 1
+~~~
+➜ dep magento:create
+➜ dep magento:create --packages=tm/ajax-pro:\*,tm/ajax-layered-navigation:\*,tm/ajax-search:\*,tm/ask-it:\*,tm/easy-banner:\*,tm/helpdesk:\*,tm/navigation-pro:\*,tm/cache:\*,tm/highlight:\*,tm/pro-labels:\*,tm/review-reminder:\*,tm/sold-together:\*
+
+➜ dep magento:releases:list
+~~~
+
+
 
 #### List releasses
 

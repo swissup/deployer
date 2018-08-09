@@ -294,6 +294,9 @@ task('magento2:release:setup:upgrade', function () {
 desc('Install magento 2 sampledata ');
 task('magento2:release:sampledata:install', function () {
 
+    if (!get('add_sample_data')) {
+        return;
+    }
     // run("cd {{release_path}} && {{bin/magento}} sampledata:deploy && {{bin/magento}} setup:upgrade");
     // return;
 

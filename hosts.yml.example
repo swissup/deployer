@@ -11,3 +11,4 @@ swissupdemo.com:
   mysql_pass: pass
   base_url: http://swissupdemo.com
   writable_use_sudo: true
+  add_sample_data: true

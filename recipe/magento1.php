@@ -181,6 +181,9 @@ task('magento:release:git:clone', function () {
 
 desc('Copys sample data (media)');
 task('magento:release:sampledata:dir', function () {
+    if (!get('add_sample_data')) {
+        return;
+    }
     $samplePath = get('magento_sample_data');
 
     $dirs = get('magento_sample_data_override_dirs');//['skin'];

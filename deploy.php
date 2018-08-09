@@ -12,5 +12,6 @@ set('keep_releases', 30);
 set('shared_dirs', []);
 set('shared_files', []);
 // set('ssh_type', 'native');
+set('default_stage', 'production');
 
 inventory('hosts.yml');

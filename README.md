@@ -34,7 +34,6 @@ Add your credentials to hosts.yml
 store.com:
   host: store.com
   user: ec2-user
-  password: pass
   port: 22
   identityFile: ~/.ssh/key.pem
   forwardAgent: true
@@ -43,7 +42,7 @@ store.com:
   deploy_path: /var/www/html
   mysql_user: user
   mysql_pass: pass
-  base_url: http://swissupdemo.com
+  base_url: http://store.com
   writable_use_sudo: true
   add_sample_data: true
 ```

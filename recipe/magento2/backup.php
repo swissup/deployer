@@ -25,6 +25,9 @@ task('magento2:backup', function () {
 before('magento2:backup', 'release:set');
 
 set('magento2_snapshot_list', function () {
+    if (test("[ ! -d {{release_path}}/var/backups ]")) {
+        run("mkdir -p {{release_path}}/var/backups");
+    }
     $snapshots = run("cd {{release_path}} && ls var/backups/*_db.sql | awk '{print $1}'");
     $snapshots = array_filter(explode("\n", $snapshots));
 
@@ -72,6 +75,13 @@ task('magento2:rollback', function () {
 
     if (empty($snapshot)) {
         writeln("<error>That task required option --snapshot=[SNAPSHOT]</error>");
+        return;
+    }
+    $snapshots = get('magento2_snapshot_list');
+
+    if (!in_array($snapshot, $snapshots)) {
+        writeln("<error>That task required valid option --snapshot=[SNAPSHOT]</error>");
+        writeln("<info>magento2:snapshot:list - show all backup</info>");
         return;
     }
     writeln($snapshot);

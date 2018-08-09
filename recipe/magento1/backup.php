@@ -22,6 +22,9 @@ task('magento:backup', function () {
 before('magento:backup', 'release:set');
 
 set('magento_snapshot_list', function () {
+    if (test("[ ! -d {{release_path}}/var/backups ]")) {
+        run("mkdir -p {{release_path}}/var/backups");
+    }
     $snapshots = run("cd {{release_path}} && ls var/backups/*_db.sql | awk '{print $1}'");
     $snapshots = array_filter(explode("\n", $snapshots));
     $_backups = array();
@@ -68,6 +71,14 @@ task('magento:rollback', function () {
         writeln("<error>That task required option --snapshot=[SNAPSHOT]</error>");
         return;
     }
+    $snapshots = get('magento_snapshot_list');
+
+    if (!in_array($snapshot, $snapshots)) {
+        writeln("<error>That task required valid option --snapshot=[SNAPSHOT]</error>");
+        writeln("<info>magento:snapshot:list - show all backup</info>");
+        return;
+    }
+
     writeln($snapshot);
 
     writeln(run("cd {{release_path}} && {{bin/magerun}} db:import --quiet var/backups/{$snapshot}_db.sql"));

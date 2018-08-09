@@ -119,7 +119,7 @@ task('magento2:release:deploy', function () {
     // writeln($releasePath);
     run("mkdir $releasePath");
     run("cd {{deploy_path}} && if [ -h release ]; then rm release; fi");
-    run("cd {{deploy_path}} && ln -nfs $releasePath release");
+    run("cd {{deploy_path}} && {{bin/symlink}} $releasePath release");
     //@todo don't use release symlink just set('release_path', $releasePath)
 })->setPrivate();
 
@@ -458,7 +458,7 @@ task('magento2:release:success', function () {
 
 desc('Creating symlink to release');
 task('magento2:release:deploy:symlink', function () {
-    // run("cd {{deploy_path}} && ln -nfs {{release_path}} current"); // Atomic override symlink.
+    // run("cd {{deploy_path}} && {{bin/symlink}} {{release_path}} current"); // Atomic override symlink.
     run("cd {{deploy_path}} && if [ -h release ]; then rm release; fi");
     // run("cd {{deploy_path}} && rm release"); // Remove release link.
 })->setPrivate();

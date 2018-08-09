@@ -15,10 +15,11 @@ set('bin/composer', function () {
     return '{{bin/php}} ' . $composer;
 });
 
+desc('Remove composer[json|lock] and vendor dir in current');
 task('composer:current:clear', function () {
     run(
         "cd {{deploy_path}}/current "
         . " && rm -f composer.json composer.lock"
         . " && rm -rf vendor"
     );
-})->desc('Remove composer[json|lock] and vendor dir in current');
+})->setPrivate();

@@ -434,6 +434,8 @@ task('magento:releases:list', function () {
 task('magento:create:failed', function () {
     $releasePath = get('release_path');
     $release = basename($releasePath);
+    // run("cd {{deploy_path}} && if [ -e release ]; then rm release; fi");
+    run("cd {{deploy_path}} && if [ -h release ]; then rm release; fi");
     run("{{bin/sudo}} rm -rf {{deploy_path}}/releases/$release");
     run("{{bin/mysql}} -Bse 'DROP DATABASE IF EXISTS db$release;'");
 })->setPrivate();

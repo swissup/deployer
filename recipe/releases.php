@@ -130,11 +130,6 @@ task('releases:remove:oldest', function () {
             }
         }
     }
-    run("cd {{deploy_path}} && if [ -e release ]; then rm release; fi");
-    run("cd {{deploy_path}} && if [ -h release ]; then rm release; fi");
-
-    run("cd {{deploy_path}} && if [ -e skeleton ]; then rm skeleton; fi");
-    run("cd {{deploy_path}} && if [ -h skeleton ]; then rm skeleton; fi");
 });
 
 desc("Remove all releases and databases");

@@ -230,6 +230,7 @@ task('magento:release:setup:install', function () {
     $_options = [
         'noDownload'             => '',
         'forceUseDb'             => '',
+        'dbHost'                 => get('mysql_host'),
         'dbUser'                 => get('mysql_user'),
         'dbPass'                 => get('mysql_pass'),
         'dbName'                 => 'db' . $release,

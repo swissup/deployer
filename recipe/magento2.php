@@ -419,6 +419,7 @@ task('magento2:release:post:install', function () {
     $commands = array(
         "{{bin/magento}} deploy:mode:set developer",
         "{{bin/magento}} setup:di:compile",
+        "{{bin/composer}} dump-autoload -o",
         "{{bin/magento}} setup:static-content:deploy -f",
         "{{bin/magento}} indexer:set-mode schedule",
         "{{bin/magento}} indexer:reindex",
@@ -468,6 +469,13 @@ task('magento2:releases:list', function () {
     }
 });
 
+task('magento2:create:failed', function () {
+    $releasePath = get('release_path');
+    $release = basename($releasePath);
+    run("{{bin/sudo}} rm -rf {{deploy_path}}/releases/$release");
+    run("{{bin/mysql}} -Bse 'DROP DATABASE IF EXISTS db$release;'");
+})->setPrivate();
+
 /**
  * Main task
  *  magento2:create --packages=swissup/ajaxpro,swissup/ajaxlayerednavigation,swissup/firecheckout,swissup/askit,swissup/testimonials,swissup/sold-together,swissup/rich-snippets,swissup/reviewreminder,swissup/pro-labels,swissup/highlight,swissup/fblike,swissup/easytabs,swissup/easy-slide,swissup/easyflags,swissup/easycatalogimg,swissup/easybanner,swissup/attributepages,swissup/ajaxsearch,swissup/address-field-manager -vv
@@ -493,3 +501,5 @@ task('magento2:create', [
     'magento2:release:success',
     'magento2:release:deploy:symlink'
 ]);
+
+fail('magento2:create', 'magento2:create:failed');

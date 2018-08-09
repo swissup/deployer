@@ -427,6 +427,13 @@ task('magento:releases:list', function () {
     }
 });
 
+task('magento:create:failed', function () {
+    $releasePath = get('release_path');
+    $release = basename($releasePath);
+    run("{{bin/sudo}} rm -rf {{deploy_path}}/releases/$release");
+    run("{{bin/mysql}} -Bse 'DROP DATABASE IF EXISTS db$release;'");
+})->setPrivate();
+
 /**
  * Main task
  * dep6 magento:create --packages=tm/ajax-pro:\*,tm/ajax-layered-navigation:\*,tm/ajax-search:\*,tm/ask-it:\*,tm/easy-banner:\*,tm/helpdesk:\*,tm/navigation-pro:\*,tm/cache:\*,tm/highlight:\*,tm/pro-labels:\*,tm/review-reminder:\*,tm/sold-together:\*
@@ -450,3 +457,5 @@ task('magento:create', [
     'magento:release:success',
     'magento:release:deploy:symlink'
 ]);
+
+fail('magento:create', 'magento:create:failed');

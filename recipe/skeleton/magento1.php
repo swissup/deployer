@@ -3,7 +3,6 @@ namespace Deployer;
 
 require_once __DIR__ . '/../magento1.php';
 
-set('use_relative_symlink', false);
 set('shared_dirs', []);
 set('shared_files', []);
 

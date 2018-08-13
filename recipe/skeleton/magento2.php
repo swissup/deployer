@@ -3,7 +3,6 @@ namespace Deployer;
 
 require_once __DIR__ . '/../magento2.php';
 
-set('use_relative_symlink', false);
 set('shared_dirs', []);
 set('shared_files', []);
 
@@ -88,6 +87,29 @@ task('magento2:skeleton:set', function () {
 desc('Disable magento 2 maintenance');
 task('magento2:skeleton:maintenance:disable', function () {
     run("cd {{skeleton_path}} && {{bin/magento}} maintenance:disable");
+})->setPrivate();
+
+// after packages:install
+desc('Disabling all swissup magento 2 modules');
+task('magento2:release:modules:disabled:all', function () {
+    $status = run("cd {{release_path}} && {{bin/magento}} module:status");
+    $rm = 'None';
+    $status = str_replace($rm, '', $status);
+    $delimiter ='List of disabled modules:';
+    list($enabled, $disable) = explode($delimiter, $status);
+    $enabled = explode("\n", $enabled);
+    $modules = array();
+    foreach ($enabled as $_enabled) {
+        if (strstr($_enabled, 'Swissup_')) {
+            $modules[] = $_enabled;
+        }
+    }
+    $modules = array_filter($modules);
+    $modules = array_unique($modules);
+    $modules = implode(' ', $modules);
+    if (!empty($modules)) {
+        run("cd {{release_path}} && {{bin/magento}} module:disable $modules");
+    }
 })->setPrivate();
 
 desc('Enabling magento 2 modules');

@@ -11,7 +11,6 @@ require_once __DIR__ . '/bin/sudo.php';
 require_once __DIR__ . '/options/packages.php';
 require_once __DIR__ . '/options/modules.php';
 
-set('use_relative_symlink', false);
 set('shared_dirs', []);
 set('shared_files', []);
 set('magento_repository', 'git@github.com:OpenMage/magento-mirror.git');
@@ -210,14 +209,14 @@ desc('Install sql data to database');
 task('magento:release:sampledata:db', function () {
     $releasePath = get('release_path');
     $release = basename($releasePath);
-    $id = $release;
-    $databaseName = 'db' . $id;
-    run("{{bin/mysql}} -Bse 'DROP DATABASE IF EXISTS $databaseName;'");
-    run("{{bin/mysql}} -Bse 'CREATE DATABASE $databaseName;'");
+    // $databaseName = get('database_name');
+
+    run("{{bin/mysql}} -Bse 'DROP DATABASE IF EXISTS {{database_name}};'");
+    run("{{bin/mysql}} -Bse 'CREATE DATABASE {{database_name}};'");
     // writeln("<info> Success db create <comment>" . $databaseName . "</comment></info>");
     $samplePath = get('magento_sample_data');
     $sqlFile = get('magento_sample_data_sql_file');
-    run("{{bin/mysql}} $databaseName < {{deploy_path}}/$samplePath/$sqlFile 1>&2");
+    run("{{bin/mysql}} {{database_name}} < {{deploy_path}}/$samplePath/$sqlFile 1>&2");
 
     // writeln("<info> Success import sample data to  <comment>" . $databaseName . "</comment></info>");
 })->setPrivate();
@@ -233,10 +232,10 @@ task('magento:release:setup:install', function () {
         'dbHost'                 => get('mysql_host'),
         'dbUser'                 => get('mysql_user'),
         'dbPass'                 => get('mysql_pass'),
-        'dbName'                 => 'db' . $release,
+        'dbName'                 => get('database_name'),
         'installationFolder'     => get('release_path'),
         'useDefaultConfigParams' => 'yes',
-        'baseUrl'                => get('base_url') . "/releases/$release"
+        'baseUrl'                => get('base_url')
     ];
 
     $options = "";
@@ -344,11 +343,13 @@ desc('Magento after installation configuration (cache clean, set pass)');
 task('magento:release:post:install', function () {
     $releasePath = get('release_path');
     $release = basename($releasePath);
+
+    $password = get('admin_password');
     run(
         "cd {{release_path}} "
         . " && {{bin/magerun}} sys:setup:run"
         // . " && {{bin/magerun}} dev:module:update"
-        . " && {{bin/magerun}} admin:user:change-password admin db{$release}"
+        . " && {{bin/magerun}} admin:user:change-password admin $password"
         . " && {{bin/magerun}} dev:symlinks 0"
         . " && {{bin/magerun}} index:reindex:all"
         . " && {{bin/magerun}} cache:clean"
@@ -405,14 +406,16 @@ task('magento:release:maintenance:enable', function () {
 
 desc('Show after installation success info');
 task('magento:release:success', function () {
-    $baseUrl = get('base_url');
     $releasePath = get('release_path');
     $release = basename($releasePath);
+    $baseUrl = get('base_url');
+    $databaseName = get('database_name');
+    $password = get('admin_password');
 
     writeln("Dir : <comment>$releasePath</comment>");
-    writeln("Db  : <comment>db$release</comment>");
-    writeln("Url : <comment>$baseUrl/releases/$release</comment>");
-    writeln("Admin Url : <comment>$baseUrl/releases/$release/index.php/admin admin db$release</comment>");
+    writeln("Db  : <comment>$databaseName</comment>");
+    writeln("Url : <comment>$baseUrl</comment>");
+    writeln("Admin Url : <comment>$baseUrl/index.php/admin admin $password</comment>");
 })->setPrivate();
 
 desc('Creating symlink to release');
@@ -431,7 +434,7 @@ task('magento:releases:list', function () {
     }
 });
 
-task('magento:create:failed', function () {
+task('magento:init:failed', function () {
     $releasePath = get('release_path');
     $release = basename($releasePath);
     // run("cd {{deploy_path}} && if [ -e release ]; then rm release; fi");
@@ -442,11 +445,12 @@ task('magento:create:failed', function () {
 
 /**
  * Main task
- * dep6 magento:create --packages=tm/ajax-pro:\*,tm/ajax-layered-navigation:\*,tm/ajax-search:\*,tm/ask-it:\*,tm/easy-banner:\*,tm/helpdesk:\*,tm/navigation-pro:\*,tm/cache:\*,tm/highlight:\*,tm/pro-labels:\*,tm/review-reminder:\*,tm/sold-together:\*
+ * dep6 magento:init --packages=tm/ajax-pro:\*,tm/ajax-layered-navigation:\*,tm/ajax-search:\*,tm/ask-it:\*,tm/easy-banner:\*,tm/helpdesk:\*,tm/navigation-pro:\*,tm/cache:\*,tm/highlight:\*,tm/pro-labels:\*,tm/review-reminder:\*,tm/sold-together:\*
  */
 desc('Create magento demo');
 desc('Create new magento demo. Options --packages=[], --tag=[]');
-task('magento:create', [
+task('magento:init', [
+    'deploy:info',
     'magento:release:check',
     'deploy:prepare',
     'magento:release:deploy',
@@ -461,7 +465,8 @@ task('magento:create', [
     'magento:release:post:install',
     // 'magento:argento:activate',
     'magento:release:success',
-    'magento:release:deploy:symlink'
+    // 'magento:release:deploy:symlink'
+    'deploy:symlink'
 ]);
 
-fail('magento:create', 'magento:create:failed');
+fail('magento:init', 'magento:init:failed');

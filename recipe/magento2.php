@@ -2,6 +2,8 @@
 namespace Deployer;
 
 require_once 'recipe/common.php';
+require_once 'recipe/magento2.php';
+require_once __DIR__ . '/releases.php';
 require_once __DIR__ . '/bin/composer.php';
 require_once __DIR__ . '/bin/magento.php';
 require_once __DIR__ . '/bin/magerun2.php';
@@ -11,9 +13,27 @@ require_once __DIR__ . '/bin/sudo.php';
 require_once __DIR__ . '/options/packages.php';
 require_once __DIR__ . '/options/modules.php';
 
-set('use_relative_symlink', false);
-set('shared_dirs', []);
-set('shared_files', []);
+// Configuration
+set('shared_files', [
+    'app/etc/config.php',
+    'app/etc/env.php',
+    'var/.maintenance.ip',
+]);
+set('shared_dirs', [
+    'var/log',
+    'var/backups',
+    'pub/media',
+]);
+set('writable_dirs', [
+    'var',
+    'pub/static',
+    'pub/media',
+]);
+set('clear_paths', [
+    'var/generation/*',
+    'var/cache/*',
+]);
+
 set('magento2_repository', 'git@github.com:magento/magento2.git');
 // set('writable_dirs', ['var']);
 
@@ -90,7 +110,7 @@ task('magento2:release:check', function () {
 
 desc('Prepare magento 2 release place');
 task('magento2:release:deploy', function () {
-    if (input()->hasOption('release')) {
+    if (input()->hasOption('release') && !empty(input()->getOption('release'))) {
         $release = input()->getOption('release');
     } else {
         if (input()->hasOption('tag')) {
@@ -116,7 +136,6 @@ task('magento2:release:deploy', function () {
     while (is_dir($releasePath) && $i < 42) {
         $releasePath .= '.' . ++$i;
     }
-    // writeln($releasePath);
     run("mkdir $releasePath");
     run("cd {{deploy_path}} && if [ -h release ]; then rm release; fi");
     run("cd {{deploy_path}} && {{bin/symlink}} $releasePath release");
@@ -230,31 +249,29 @@ task('magento2:release:permissions', function () {
 
 desc('Create database for magento 2 instance');
 task('magento2:release:create:db', function () {
-    $releasePath = get('release_path');
-    $release = basename($releasePath);
-    // $databaseName = 'db' . $release;
-    run("{{bin/mysql}} -Bse 'DROP DATABASE IF EXISTS db$release;'");
-    run("{{bin/mysql}} -Bse 'CREATE DATABASE db$release;'");
+    run("{{bin/mysql}} -Bse 'DROP DATABASE IF EXISTS {{database_name}};'");
+    run("{{bin/mysql}} -Bse 'CREATE DATABASE {{database_name}};'");
 })->setPrivate();
 
 desc('Install magerun 2 (bin/magento setup:install)');
 task('magento2:release:setup:install', function () {
-    $releasePath = get('release_path');
-    $release = basename($releasePath);
-    $baseUrl = get('base_url');
+    // $releasePath = get('release_path');
+    // $release = basename($releasePath);
+    $databaseName = get('database_name');
+    $adminPassword = get('admin_password');
 
     $_options = [
         'admin-firstname'   => 'John',
         'admin-lastname'    => 'Doe',
         'admin-email'       => 'john.doe@gmail.com',
         'admin-user'        => 'admin',
-        'admin-password'    => 'db' . $release,//uniqid($release),
-        'base-url'          => "$baseUrl/releases/$release",
+        'admin-password'    => $adminPassword,//uniqid($release),
+        'base-url'          => get('base_url'),
         'backend-frontname' => 'admin',
         'db-host'           => get('mysql_host'),
         'db-user'           => get('mysql_user'),
         'db-password'       => get('mysql_pass'),
-        'db-name'           => 'db' . $release,
+        'db-name'           => $databaseName,
         'language'          => 'en_US',
         'currency'          => 'USD',
         'timezone'          => 'America/Chicago',
@@ -273,7 +290,7 @@ task('magento2:release:setup:install', function () {
 })->setPrivate();
 
 desc('Set composer minimum-stability="dev"');
-task('magento2:release:composer:stability_dev', function () {
+task('magento2:release:composer:preinstall', function () {
     run(
         "cd {{release_path}} "
         . "&& mv -f composer.json composer.json.old"
@@ -284,8 +301,8 @@ task('magento2:release:composer:stability_dev', function () {
     );
 })->setPrivate();
 
-// before('magento2:release:composer:install', 'magento2:release:composer:stability_dev');
-// before('magento2:release:sampledata:install', 'magento2:release:composer:stability_dev');
+// before('magento2:release:composer:install', 'magento2:release:composer:preinstall');
+// before('magento2:release:sampledata:install', 'magento2:release:composer:preinstall');
 //
 task('magento2:release:setup:upgrade', function () {
     run("cd {{release_path}} && {{bin/magento}} setup:upgrade");
@@ -297,69 +314,46 @@ task('magento2:release:sampledata:install', function () {
     if (!get('add_sample_data')) {
         return;
     }
-    // run("cd {{release_path}} && {{bin/magento}} sampledata:deploy && {{bin/magento}} setup:upgrade");
+    // run("cd {{release_path}} && {{bin/magento}} sampledata:deploy", [
+    //     'timeout' => 1000
+    // ]);
+    // run("cd {{release_path}} && {{bin/magento}} setup:upgrade", [
+    //     'timeout' => 600
+    // ]);
     // return;
 
     run(
         "if [ ! -d {{deploy_path}}/magento2-sample-data ]; then  "
         . "cd {{deploy_path}};"
         . "{{bin/git}} clone git@github.com:magento/magento2-sample-data.git;"
+        . "{{bin/sudo}} chown -R :{{httpuser}} magento2-sample-data ;"
+        . "{{bin/sudo}} find magento2-sample-data -type d -exec chmod g+ws {} \; ;"
         . " fi"
     );
+    run("cd {{deploy_path}}/magento2-sample-data && {{bin/git}} fetch && {{bin/git}} checkout ");
+
     if (input()->hasOption('tag')) {
         $tag = input()->getOption('tag');
     }
+    if (empty($tag)) {
+        $tag = get('magento2_repository_last_tag');
+    }
+
     if (!empty($tag)) {
-        run("cd {{deploy_path}}/magento2-sample-data && {{bin/git}} pull origin develop && {{bin/git}} checkout $tag");
+        run("cd {{deploy_path}}/magento2-sample-data && {{bin/git}} checkout $tag");
     }
     run(
         "php -f {{deploy_path}}/magento2-sample-data/dev/tools/build-sample-data.php -- "
         . "--ce-source=\"{{release_path}}\""
     );
+
+    run("cd {{release_path}} && {{bin/sudo}} rm -rf cache/* page_cache/* generation/*");
     run("cd {{release_path}} && {{bin/magento}} setup:upgrade", [
         'timeout' => 600
     ]);
     if (!empty($tag)) {
-        run("cd {{deploy_path}}/magento2-sample-data && {{bin/git}} checkout develop");
+        run("cd {{deploy_path}}/magento2-sample-data && {{bin/git}} checkout ");
     }
-    return;
-    // $packages = [
-    //     "magento/module-bundle-sample-data",
-    //     "magento/module-catalog-rule-sample-data",
-    //     "magento/module-catalog-sample-data",
-    //     "magento/module-cms-sample-data",
-    //     "magento/module-configurable-sample-data",
-    //     "magento/module-customer-sample-data",
-    //     "magento/module-downloadable-sample-data",
-    //     "magento/module-grouped-product-sample-data",
-    //     "magento/module-msrp-sample-data",
-    //     "magento/module-offline-shipping-sample-data",
-    //     "magento/module-product-links-sample-data",
-    //     "magento/module-review-sample-data",
-    //     "magento/module-sales-rule-sample-data",
-    //     "magento/module-sales-sample-data",
-    //     "magento/module-sample-data",
-    //     "magento/module-swatches-sample-data",
-    //     "magento/module-tax-sample-data",
-    //     "magento/module-theme-sample-data",
-    //     "magento/module-widget-sample-data",
-    //     "magento/module-wishlist-sample-data"
-    // ];
-    // $version = ':~100.0.1';
-    // foreach ($packages as $package) {
-    //     run("cd {{release_path}} && {{bin/composer}} require -n --no-update $package$version");
-    // }
-    // writeln(run(
-    //     "cd {{release_path}} "
-    //     . "&& {{bin/composer}} update {{composer_params}}"
-    //     . "&& {{bin/magento}} setup:upgrade"
-    // ));
-    // return;
-    // run(
-    //     "cd {{release_path}} "
-    //     . "&& {{bin/composer}} update {{composer_params}}"
-    //     . "&& {{bin/magento}} sampledata:deploy "
-    // );
 })->setPrivate();
 
 desc('Install swissup packages (composer require)');
@@ -394,36 +388,13 @@ task('magento2:release:packages:install', function () {
     run("cd {{release_path}} && {{bin/magento}} setup:upgrade");
 })->setPrivate();
 
-// after packages:install
-desc('Disabling all swissup magento 2 modules');
-task('magento2:release:modules:disabled:all', function () {
-    $status = run("cd {{release_path}} && {{bin/magento}} module:status");
-    $rm = 'None';
-    $status = str_replace($rm, '', $status);
-    $delimiter ='List of disabled modules:';
-    list($enabled, $disable) = explode($delimiter, $status);
-    $enabled = explode("\n", $enabled);
-    $modules = array();
-    foreach ($enabled as $_enabled) {
-        if (strstr($_enabled, 'Swissup_')) {
-            $modules[] = $_enabled;
-        }
-    }
-    $modules = array_filter($modules);
-    $modules = array_unique($modules);
-    $modules = implode(' ', $modules);
-    if (!empty($modules)) {
-        run("cd {{release_path}} && {{bin/magento}} module:disable $modules");
-    }
-})->setPrivate();
-
 desc('Magento 2 after installation configuration (cache clean, set pass)');
 task('magento2:release:post:install', function () {
     $commands = array(
         "{{bin/magento}} deploy:mode:set developer",
         "{{bin/magento}} setup:di:compile",
         "{{bin/composer}} dump-autoload -o",
-        "{{bin/magento}} setup:static-content:deploy -f",
+        "{{bin/magento}} setup:static-content:deploy -f en_US",
         "{{bin/magento}} indexer:set-mode schedule",
         "{{bin/magento}} indexer:reindex",
         "{{bin/magento}} cache:clean",
@@ -434,7 +405,7 @@ task('magento2:release:post:install', function () {
     );
     foreach ($commands as $command) {
         run("cd {{release_path}} && " . $command, [
-            'timeout' => 600
+            'timeout' => 1200
         ]);
     }
 })->setPrivate();
@@ -449,11 +420,13 @@ task('magento2:release:success', function () {
     $releasePath = get('release_path');
     $release = basename($releasePath);
     $baseUrl = get('base_url');
-    $releasePath = get('release_path');
+    $databaseName = get('database_name');
+    $password = get('admin_password');
+
     writeln("Dir : <comment>$releasePath</comment>");
-    writeln("Db  : <comment>db$release</comment>");
-    writeln("Url : <comment>$baseUrl/releases/$release</comment>");
-    writeln("Admin Url : <comment>$baseUrl/releases/$release/index.php/admin admin db$release</comment>");
+    writeln("Db  : <comment>$databaseName</comment>");
+    writeln("Url : <comment>$baseUrl</comment>");
+    writeln("Admin Url : <comment>$baseUrl/index.php/admin admin $password</comment>");
 })->setPrivate();
 
 desc('Creating symlink to release');
@@ -472,28 +445,38 @@ task('magento2:releases:list', function () {
     }
 });
 
-task('magento2:create:failed', function () {
-    $releasePath = get('release_path');
-    $release = basename($releasePath);
-    // run("cd {{deploy_path}} && if [ -e release ]; then rm release; fi");
-    run("cd {{deploy_path}} && if [ -h release ]; then rm release; fi");
-    run("{{bin/sudo}} rm -rf {{deploy_path}}/releases/$release");
-    run("{{bin/mysql}} -Bse 'DROP DATABASE IF EXISTS db$release;'");
+task('magento2:init:failed', function () {
+    if (test("[ -h {{deploy_path}}/release ]")) {
+        $releasePath = get('release_path');
+        $release = basename($releasePath);
+        $databaseName = get('database_name');
+
+        // run("cd {{deploy_path}} && if [ -e release ]; then rm release; fi");
+
+        if (test("[ -d {{deploy_path}}/releases/$release ]")) {
+            run("{{bin/sudo}} rm -rf {{deploy_path}}/releases/$release");
+        }
+        run("{{bin/mysql}} -Bse 'DROP DATABASE IF EXISTS $databaseName;'");
+
+        run("cd {{deploy_path}} && if [ -h release ]; then rm release; fi");
+    }
 })->setPrivate();
 
 /**
  * Main task
- *  magento2:create --packages=swissup/ajaxpro,swissup/ajaxlayerednavigation,swissup/firecheckout,swissup/askit,swissup/testimonials,swissup/sold-together,swissup/rich-snippets,swissup/reviewreminder,swissup/pro-labels,swissup/highlight,swissup/fblike,swissup/easytabs,swissup/easy-slide,swissup/easyflags,swissup/easycatalogimg,swissup/easybanner,swissup/attributepages,swissup/ajaxsearch,swissup/address-field-manager -vv
+ * dep magento2:init --packages=swissup/ajaxpro,swissup/ajaxlayerednavigation,swissup/firecheckout,swissup/askit,swissup/testimonials,swissup/sold-together,swissup/rich-snippets,swissup/reviewreminder,swissup/pro-labels,swissup/highlight,swissup/fblike,swissup/easytabs,swissup/easy-slide,swissup/easyflags,swissup/easycatalogimg,swissup/easybanner,swissup/attributepages,swissup/ajaxsearch,swissup/address-field-manager,swissup/argento-m2 -vv
  */
-desc('Create new magento2 demo. Options --packages=[], --tag=[]');
-task('magento2:create', [
+desc('Init new magento2 demo. Options --packages=[], --tag=[]');
+task('magento2:init', [
+    'deploy:info',
     'magento2:release:check',
     'deploy:prepare',
     'magento2:release:deploy',
     'magento2:release:git:clone',
     'deploy:shared',
+    'deploy:writable',
     'magento2:release:auth_json',
-    'magento2:release:composer:stability_dev',
+    'magento2:release:composer:preinstall',
     'magento2:release:composer:install',
     'magento2:release:create:db',
     'magento2:release:setup:install',
@@ -503,8 +486,10 @@ task('magento2:create', [
     'magento2:release:post:install',
     'magento2:usermod',
     'magento2:release:permissions',
-    'magento2:release:success',
-    'magento2:release:deploy:symlink'
-]);
+    'deploy:symlink',
+    // 'cleanup',
+    'magento2:release:success'
+    // 'magento2:release:deploy:symlink'
+])->once();
 
-fail('magento2:create', 'magento2:create:failed');
+fail('magento2:init', 'magento2:init:failed');

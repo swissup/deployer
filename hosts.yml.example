@@ -11,8 +11,6 @@ swissupdemo.com:
   mysql_user: user
   mysql_pass: pass
   base_url: http://{{hostname}}/releases/{{release}}
-  writable_use_sudo: true
-  add_sample_data: false
 
 swissupdemo.com/test:
   host: swissupdemo.com
@@ -27,5 +25,4 @@ swissupdemo.com/test:
   mysql_user: user
   mysql_pass: pass
   base_url: http://{{hostname}}/current
-  writable_use_sudo: true
   add_sample_data: true

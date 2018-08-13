@@ -1,5 +1,5 @@
 # Deployer
-Deployment tool
+Install magento recipe(s) for [deployer](http://deployer.org/)
 
 ### Example:
 
@@ -55,17 +55,34 @@ Check your ssh connection
 
 ### Usage
 
-#### Create magento 2
-~~~
-➜ dep magento2:create
-➜ dep magento2:create --packages=swissup/ajaxpro,swissup/ajaxlayerednavigation,swissup/firecheckout,swissup/askit,swissup/testimonials,swissup/sold-together,swissup/rich-snippets,swissup/reviewreminder,swissup/pro-labels,swissup/highlight,swissup/fblike,swissup/easytabs,swissup/easy-slide,swissup/easyflags,swissup/easycatalogimg,swissup/easybanner,swissup/attributepages,swissup/ajaxsearch,swissup/address-field-manager -v
+#### Init magento 2
+
+~~~bash
+➜ dep magento2:init
+➜ dep magento2:init --packages=swissup/ajaxpro,swissup/ajaxlayerednavigation,swissup/firecheckout,swissup/askit,swissup/testimonials,swissup/sold-together,swissup/rich-snippets,swissup/reviewreminder,swissup/pro-labels,swissup/highlight,swissup/fblike,swissup/easytabs,swissup/easy-slide,swissup/easyflags,swissup/easycatalogimg,swissup/easybanner,swissup/attributepages,swissup/ajaxsearch,swissup/address-field-manager -v
 
 ➜ dep magento2:releases:list
-
-➜ dep magento2:skeleton:create --packages=swissup/ajaxpro,swissup/ajaxlayerednavigation,swissup/firecheckout,swissup/askit,swissup/testimonials,swissup/sold-together,swissup/rich-snippets,swissup/reviewreminder,swissup/pro-labels,swissup/highlight,swissup/fblike,swissup/easytabs,swissup/easy-slide,swissup/easyflags,swissup/easycatalogimg,swissup/easybanner,swissup/attributepages,swissup/ajaxsearch,swissup/address-field-manager -v
-➜ dep magento2:skeleton:summon --modules=Swissup_Core,Swissup_Askit
-➜ dep magento2:skeleton:summon --packages=swissup/ajaxpro
 ~~~
+
+If every think goes well, deployer will create next structure on remote host in deploy_path:
+
+```bash
+.
+├── .dep
+├── magento2-sample-data
+├── current -> /var/www/html/releases/225020180813032114
+├── releases
+│   └── 225020180813032114
+└── shared
+    ├── app
+    ├── pub
+    └── var
+```
+
+ - releases dir contains deploy releases of magento application,
+ - shared dir contains config, var and pub resouyrces which will be symlinked to each release
+ - current is symlink to last release,
+ - .dep dir contains special metadata for deployer (releases log, deploy.log file, etc).
 
 Configure your server to serve files from the current folder. For example if you are using [nginx](https://github.com/magento/magento2/blob/2.2-develop/nginx.conf.sample#L11) next:
 
@@ -84,36 +101,43 @@ Now you will be able to serve your project
 
 
 #### Create magento 1
-~~~
-➜ dep magento:create
-➜ dep magento:create --packages=tm/ajax-pro:\*,tm/ajax-layered-navigation:\*,tm/ajax-search:\*,tm/ask-it:\*,tm/easy-banner:\*,tm/helpdesk:\*,tm/navigation-pro:\*,tm/cache:\*,tm/highlight:\*,tm/pro-labels:\*,tm/review-reminder:\*,tm/sold-together:\*
+~~~bash
+➜ dep magento:init
+➜ dep magento:init --packages=tm/ajax-pro:\*,tm/ajax-layered-navigation:\*,tm/ajax-search:\*,tm/ask-it:\*,tm/easy-banner:\*,tm/helpdesk:\*,tm/navigation-pro:\*,tm/cache:\*,tm/highlight:\*,tm/pro-labels:\*,tm/review-reminder:\*,tm/sold-together:\*
 
 ➜ dep magento:releases:list
 ~~~
 
-
-
 #### List releasses
 
-~~~
+~~~bash
 ➜ dep releases:list
 ➜ dep releases:list -vv
 ~~~
 
 #### Clear all
 
-~~~
+~~~bash
 ➜ dep releases:remove:all
 ~~~
 
 #### Back up & Rool back
 
-~~~
+~~~bash
 ➜ dep magento:backup --release=193900000000000000
 ➜ dep magento:snapshot:list --release=193900000000000000
 1531827423 | 2018-07-17 14:37:03
 ➜ dep magento:rollback --release=193900000000000000 --snapshot=1531827423
 ➜ dep magento:rollback --release=193900000000000000
+~~~
+
+Create skeleton
+
+~~~bash
+
+➜ dep magento2:skeleton:create --packages=swissup/ajaxpro,swissup/ajaxlayerednavigation,swissup/firecheckout,swissup/askit,swissup/testimonials,swissup/sold-together,swissup/rich-snippets,swissup/reviewreminder,swissup/pro-labels,swissup/highlight,swissup/fblike,swissup/easytabs,swissup/easy-slide,swissup/easyflags,swissup/easycatalogimg,swissup/easybanner,swissup/attributepages,swissup/ajaxsearch,swissup/address-field-manager -v
+➜ dep magento2:skeleton:summon --modules=Swissup_Core,Swissup_Askit
+➜ dep magento2:skeleton:summon --packages=swissup/ajaxpro
 ~~~
 
 ### Remote server system requirements

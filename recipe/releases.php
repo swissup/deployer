@@ -4,11 +4,6 @@ namespace Deployer;
 
 require_once __DIR__ . '/bin/sudo.php';
 
-set('release_path', function () {
-    // return str_replace("\n", '', run("cd {{deploy_path}} && if [ -d release ]; then readlink release; fi"));
-    return str_replace("\n", '', run("readlink {{deploy_path}}/release"));
-});
-
 desc('Show path to current release');
 task('release:path', function () {
     writeln(get('release_path'));
@@ -17,6 +12,14 @@ task('release:path', function () {
 set('release', function () {
     $path = str_replace("\n", '', run("readlink {{deploy_path}}/release"));
     return basename($path); //{{deploy_path}}/release
+});
+
+set('database_name', function () {
+    return 'db' . (get('mysql_db') ? get('mysql_db') : get('release'));
+});
+
+set('admin_password', function () {
+    return get('database_name');
 });
 
 desc("Show current release (clone task current)");

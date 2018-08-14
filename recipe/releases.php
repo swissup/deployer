@@ -14,15 +14,6 @@ set('release', function () {
     return basename($path); //{{deploy_path}}/release
 });
 
-set('database_name', function () {
-    return 'db' . (get('mysql_db') ? get('mysql_db') : get('release'));
-});
-
-set('admin_password', function () {
-    return md5(get('deploy_path') . hash('sha256', get('hostname')));
-    // return get('database_name');
-});
-
 desc("Show current release (clone task current)");
 task('release:current', function () {
     $release = get('release');
@@ -176,3 +167,12 @@ task('releases:remove', function () {
     run("cd {{deploy_path}} && if [ -h release ]; then rm release; fi");
 });
 before('releases:remove', 'release:set');
+
+set('database_name', function () {
+    return 'db' . (get('mysql_db') ? get('mysql_db') : get('release'));
+});
+
+set('admin_password', function () {
+    return md5(get('deploy_path') . hash('sha256', get('hostname')));
+    // return get('database_name');
+});

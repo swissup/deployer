@@ -3,8 +3,8 @@ namespace Deployer;
 
 require_once __DIR__ . '/../magento2.php';
 
-set('shared_dirs', []);
-set('shared_files', []);
+// set('shared_dirs', []);
+// set('shared_files', []);
 
 set('magento2_skeleton_temp_dir', 'skeletonm2');
 

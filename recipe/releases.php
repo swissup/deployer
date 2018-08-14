@@ -10,7 +10,7 @@ task('release:path', function () {
 });
 
 set('release', function () {
-    $path = str_replace("\n", '', run("readlink {{deploy_path}}/release"));
+    $path = get('release_path');//str_replace("\n", '', run("readlink {{deploy_path}}/release"));
     return basename($path); //{{deploy_path}}/release
 });
 
@@ -19,7 +19,8 @@ set('database_name', function () {
 });
 
 set('admin_password', function () {
-    return get('database_name');
+    return md5(get('deploy_path') . hash('sha256', get('hostname')));
+    // return get('database_name');
 });
 
 desc("Show current release (clone task current)");
@@ -90,7 +91,7 @@ task('releases:list:db', function () {
             writeln("$db");
         }
     }
-})->setPrivate();
+});//->setPrivate();
 
 /**
  * Cleanup

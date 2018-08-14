@@ -3,8 +3,8 @@ namespace Deployer;
 
 require_once __DIR__ . '/../magento1.php';
 
-set('shared_dirs', []);
-set('shared_files', []);
+// set('shared_dirs', []);
+// set('shared_files', []);
 
 set('skeleton_path', function () {
     return str_replace("\n", '', run("cd {{deploy_path}} && if [ -d skeleton ]; then readlink skeleton; fi"));

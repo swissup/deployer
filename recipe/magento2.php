@@ -2,7 +2,7 @@
 namespace Deployer;
 
 require_once 'recipe/common.php';
-require_once 'recipe/magento2.php';
+// require_once 'recipe/magento2.php';
 require_once __DIR__ . '/releases.php';
 require_once __DIR__ . '/bin/composer.php';
 require_once __DIR__ . '/bin/magento.php';
@@ -139,7 +139,7 @@ task('magento2:release:deploy', function () {
     run("mkdir $releasePath");
     run("cd {{deploy_path}} && if [ -h release ]; then rm release; fi");
     run("cd {{deploy_path}} && {{bin/symlink}} $releasePath release");
-    //@todo don't use release symlink just set('release_path', $releasePath)
+    set('release_path', $releasePath);
 })->setPrivate();
 
 /**
@@ -183,7 +183,7 @@ task('magento2:release:git:clone', function () {
         run("cd {{release_path}} && {{bin/git}} checkout $tag");
     }
     run("cd {{release_path}} && {{bin/git}} config core.fileMode false");
-})->setPrivate();
+});//->setPrivate();
 
 desc('Create auth.json if not exist and add repo.magento.com credentials');
 task('magento2:release:auth_json', function () {
@@ -400,7 +400,7 @@ task('magento2:release:post:install', function () {
         "{{bin/magento}} cache:clean",
         "{{bin/magento}} cache:flush",
         "{{bin/magento}} cron:run",
-        "{{bin/magento}} config:set dev/static/sign 0 ",
+        "{{bin/magento}} config:set dev/static/sign 0 --lock-env",
         "{{bin/magento}} cache:clean config"
     );
     foreach ($commands as $command) {
@@ -413,6 +413,27 @@ task('magento2:release:post:install', function () {
 desc('Enable magento 2 maintenance');
 task('magento2:release:maintenance:enable', function () {
     run("cd {{release_path}} && {{bin/magento}} maintenance:enable");
+})->setPrivate();
+
+desc('Disable magento 2 maintenance');
+task('magento2:release:maintenance:disable', function () {
+    run("cd {{release_path}} && {{bin/magento}} maintenance:disable");
+})->setPrivate();
+
+desc('magento 2 shared dump config');
+task('magento2:app:config:dump', function () {
+    cd('{{release_path}}');
+    // if (commandSupportsOption('{{bin/magento}}', 'app:config:dump')) {
+        run("cd {{release_path}} && {{bin/magento}} app:config:dump");
+    // }
+})->setPrivate();
+
+desc('magento 2 import config');
+task('magento2:app:config:import', function () {
+    cd('{{release_path}}');
+    // if (commandSupportsOption('{{bin/magento}}', 'app:config:import')) {
+        run("cd {{release_path}} && {{bin/magento}} app:config:import");
+    // }
 })->setPrivate();
 
 desc('Show after installation success info');
@@ -456,9 +477,9 @@ task('magento2:init:failed', function () {
         if (test("[ -d {{deploy_path}}/releases/$release ]")) {
             run("{{bin/sudo}} rm -rf {{deploy_path}}/releases/$release");
         }
-        run("{{bin/mysql}} -Bse 'DROP DATABASE IF EXISTS $databaseName;'");
-
         run("cd {{deploy_path}} && if [ -h release ]; then rm release; fi");
+
+        run("cd {{deploy_path}} && {{bin/mysql}} -Bse 'DROP DATABASE IF EXISTS $databaseName;'");
     }
 })->setPrivate();
 
@@ -469,12 +490,11 @@ task('magento2:init:failed', function () {
 desc('Init new magento2 demo. Options --packages=[], --tag=[]');
 task('magento2:init', [
     'deploy:info',
-    'magento2:release:check',
+    // 'magento2:release:check',
     'deploy:prepare',
-    'magento2:release:deploy',
-    'magento2:release:git:clone',
-    'deploy:shared',
-    'deploy:writable',
+    'deploy:lock',
+    'magento2:release:deploy', //'deploy:release',
+    'magento2:release:git:clone', //'deploy:update_code',
     'magento2:release:auth_json',
     'magento2:release:composer:preinstall',
     'magento2:release:composer:install',
@@ -486,10 +506,43 @@ task('magento2:init', [
     'magento2:release:post:install',
     'magento2:usermod',
     'magento2:release:permissions',
+    'magento2:app:config:dump',
+    'deploy:shared',
+    'deploy:writable',
     'deploy:symlink',
+    'deploy:unlock',
     // 'cleanup',
     'magento2:release:success'
     // 'magento2:release:deploy:symlink'
 ])->once();
 
 fail('magento2:init', 'magento2:init:failed');
+
+desc('Deploy magento2');
+task('magento2:deploy', [
+    'deploy:info',
+    'magento2:release:check',
+    'deploy:prepare',
+    'deploy:lock',
+    'magento2:release:deploy', // 'deploy:release',
+    'magento2:release:git:clone',
+    'deploy:shared',
+    'magento2:release:auth_json',
+    'magento2:release:composer:preinstall',
+    'magento2:release:composer:install',
+    'magento2:release:maintenance:enable',
+    'magento2:app:config:import',
+    'magento2:release:setup:upgrade',
+    'magento2:release:packages:install',
+    'magento2:release:post:install',
+    'magento2:release:permissions',
+    'magento2:app:config:dump',
+    'magento2:release:maintenance:disable',
+    'deploy:writable',
+    'deploy:clear_paths',
+    'deploy:symlink',
+    'deploy:unlock',
+    'cleanup',
+    'magento2:release:success'
+]);
+fail('magento2:deploy', 'magento2:init:failed');

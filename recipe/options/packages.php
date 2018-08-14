@@ -15,10 +15,11 @@ set('option_packages', function () {
         $rawpackages = input()->getOption('packages');
 
         if (empty($rawpackages)) {
-            $packages = [];
+            $packages = get('packages');
         } else {
-            $packages = explode(',', $rawpackages);
+            $packages = $rawpackages;
         }
+        $packages = explode(',', $packages);
 
         $requireall = function ($vendor) {
             $packages = [];
@@ -66,10 +67,11 @@ set('option_packages_filtred', function () {
         $rawpackages = input()->getOption('packages');
 
         if (empty($rawpackages)) {
-            $packages = [];
+            $packages = get('packages');
         } else {
-            $packages = explode(',', $rawpackages);
+            $packages = $rawpackages;
         }
+        $packages = explode(',', $packages);
 
         $requireall = function ($vendor) {
             $packages = [];
@@ -125,6 +127,6 @@ set('option_packages_filtred', function () {
 });
 
 task('debug:option:packages', function () {
-    $modules = get('option_packages');
+    $modules = get('option_packages_filtred');
     print_r($modules);
 });

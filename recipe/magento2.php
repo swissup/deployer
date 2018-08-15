@@ -100,6 +100,7 @@ task('magento2:release:check', function () {
 
         if (14400 > abs(time() - $release)) {
             writeln("<error>Resource 'release' is busy</error>");
+            throw new RuntimeException("Resource 'release' is busy\n");
             die;
         } else {
             writeln("<error>Resource 'release' is old and has been removed</error>");
@@ -190,8 +191,14 @@ task('magento2:release:auth_json', function () {
 
     // $username = get('magento_composer_username');
     // $password = get('magento_composer_password');
-    $username = runLocally('{{bin/composer}} global config http-basic.repo.magento.com.username');
-    $password = runLocally('{{bin/composer}} global config http-basic.repo.magento.com.password');
+    try {
+        $username = runLocally('{{bin/composer}} global config http-basic.repo.magento.com.username');
+        $password = runLocally('{{bin/composer}} global config http-basic.repo.magento.com.password');
+    } catch (RuntimeException $e) {
+        writeln('Get and set your magento <a href="https://devdocs.magento.com/guides/v2.2/install-gde/prereq/connect-auth.html">Access Keys</a>');
+        writeln("{bin/composer}} config http-basic.repo.magento.com [Public Key] [Private Key]");
+        throw $e;
+    }
     // run(
     //     "if [ ! -f {{auth.json}} ]; then " .
     //     "echo '{}' > {{auth.json}}.old; " .

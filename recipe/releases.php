@@ -4,6 +4,8 @@ namespace Deployer;
 
 require_once __DIR__ . '/bin/sudo.php';
 
+set('database_name_prefix', 'db');
+
 desc('Show path to current release');
 task('release:path', function () {
     writeln(get('release_path'));
@@ -78,7 +80,7 @@ desc("List all databases");
 task('releases:list:db', function () {
     $dbs = get('get_all_databases');
     foreach ($dbs as $db) {
-        if (0 === strpos($db, "db")) {
+        if (0 === strpos($db, get('database_name_prefix'))) {
             writeln("$db");
         }
     }
@@ -143,7 +145,7 @@ desc("Remove all databases");
 task('releases:remove:all:db', function () {
     $dbs = get('get_all_databases');
     foreach ($dbs as $db) {
-        if (0 === strpos($db, "db")) {
+        if (0 === strpos($db, get('database_name_prefix'))) {
             run("{{bin/mysql}} -Bse 'drop database $db'");
         }
     }
@@ -169,7 +171,7 @@ task('releases:remove', function () {
 before('releases:remove', 'release:set');
 
 set('database_name', function () {
-    return 'db' . (get('mysql_db') ? get('mysql_db') : get('release'));
+    return get('database_name_prefix') . (get('mysql_db') ? get('mysql_db') : get('release'));
 });
 
 set('admin_password', function () {

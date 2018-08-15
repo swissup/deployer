@@ -11,6 +11,8 @@ task('test', function () {
      // writeln(get('httpuser'));
      // writeln(get('current_path'));
      writeln(get('admin_password'));
-     writeln(get('admin_password'));
+     writeln(getenv());
+     // writeln(getenv());
+
     // writeln(has('previous_release') ? 'true' : 'false');
 });

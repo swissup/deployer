@@ -479,11 +479,10 @@ task('magento2:init:failed', function () {
         $release = basename($releasePath);
         $databaseName = get('database_name');
 
-        // run("cd {{deploy_path}} && if [ -e release ]; then rm release; fi");
-
         if (test("[ -d {{deploy_path}}/releases/$release ]")) {
             run("{{bin/sudo}} rm -rf {{deploy_path}}/releases/$release");
         }
+        // run("cd {{deploy_path}} && if [ -e release ]; then rm release; fi");
         run("cd {{deploy_path}} && if [ -h release ]; then rm release; fi");
 
         run("cd {{deploy_path}} && {{bin/mysql}} -Bse 'DROP DATABASE IF EXISTS $databaseName;'");

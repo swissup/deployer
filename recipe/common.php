@@ -11,7 +11,7 @@ task('test', function () {
      // writeln(get('httpuser'));
      // writeln(get('current_path'));
      writeln(get('admin_password'));
-     writeln(getenv());
+     writeln(get('database_name_prefix'));
      // writeln(getenv());
 
     // writeln(has('previous_release') ? 'true' : 'false');

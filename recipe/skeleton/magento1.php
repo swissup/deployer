@@ -151,11 +151,13 @@ task('magento:skeleton:success', function () {
     $baseUrl = get('base_url');
     $releasePath = get('skeleton_path');
     $release = basename($releasePath);
+    $databaseName = get('database_name');
+    $password = get('admin_password');
 
     writeln("Dir : <comment>$releasePath</comment>");
-    writeln("Db  : <comment>db$release</comment>");
+    writeln("Db  : <comment>$databaseName</comment>");
     writeln("Url : <comment>$baseUrl/releases/$release</comment>");
-    writeln("Admin Url : <comment>$baseUrl/releases/$release/index.php/admin admin db$release</comment>");
+    writeln("Admin Url : <comment>$baseUrl/releases/$release/index.php/admin admin $password</comment>");
 })->setPrivate();
 
 desc('Show after full installation success info');

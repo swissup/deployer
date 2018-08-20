@@ -4,7 +4,11 @@ namespace Deployer;
 
 require_once __DIR__ . '/bin/sudo.php';
 
-set('database_name_prefix', 'db');
+set('database_name_prefix', function () {
+    return 'db' . crc32(get('hostname'));
+    // return 'db';
+    // return 'db_' . preg_replace("/[^A-Za-z0-9 ]/", '_', get('hostname')) . '_';
+});
 
 desc('Show path to current release');
 task('release:path', function () {
@@ -98,7 +102,7 @@ task('releases:remove:old', function () {
     $dbs = get('get_all_databases');
     foreach ($releases as $release) {
         run("{{bin/sudo}} rm -rf {{deploy_path}}/releases/$release");
-        $db = "db$release";
+        $db = get('database_name_prefix') . $release;
         if (in_array($db, $dbs)) {
             run("{{bin/mysql}} -Bse 'drop database $db'");
         }
@@ -121,7 +125,7 @@ task('releases:remove:oldest', function () {
         // writeln(($deadtime > $_release ? 'true' : 'false')) ;
         if ($deadtime > $_release) {
             run("{{bin/sudo}} rm -rf {{deploy_path}}/releases/$release");
-            $db = "db$release";
+            $db = get('database_name_prefix') . $release;
             if (in_array($db, $dbs)) {
                 run("{{bin/mysql}} -Bse 'drop database $db'");
             }
@@ -159,7 +163,7 @@ task('releases:remove', function () {
 
     run("{{bin/sudo}} rm -rf {{deploy_path}}/releases/$release");
 
-    $db = "db$release";
+    $db = get('database_name_prefix') . $release;
     $dbs = get('get_all_databases');
     if (in_array($db, $dbs)) {
         run("{{bin/mysql}} -Bse 'drop database $db'");

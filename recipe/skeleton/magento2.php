@@ -168,11 +168,13 @@ task('magento2:skeleton:success', function () {
     $baseUrl = get('base_url');
     $releasePath = get('skeleton_path');
     $release = basename($releasePath);
+    $databaseName = get('database_name');
+    $password = get('admin_password');
 
     writeln("Dir : <comment>$releasePath</comment>");
-    writeln("Db  : <comment>db$release</comment>");
+    writeln("Db  : <comment>$databaseName</comment>");
     writeln("Url : <comment>$baseUrl/releases/$release</comment>");
-    writeln("Admin Url : <comment>$baseUrl/releases/$release/index.php/admin admin db$release</comment>");
+    writeln("Admin Url : <comment>$baseUrl/releases/$release/index.php/admin admin $password</comment>");
 
     run("if [ -h {{skeleton_path}} ]; then rm {{skeleton_path}}; fi");
 })->setPrivate();

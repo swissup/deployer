@@ -23,6 +23,6 @@ set('multiplexing', true);
 set('add_sample_data', false);
 set('mysql_host', '127.0.0.1');
 set('mysql_db', false);
-// set('packages', false);
+set('packages', false);
 
 inventory('hosts.yml');

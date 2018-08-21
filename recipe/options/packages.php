@@ -52,7 +52,7 @@ set('option_packages', function () {
         $packages = array_diff($packages, ['tm/*', 'swissup/*']);
 
         foreach ($packages as &$package) {
-            if (false === strpos($package, ':')) {
+            if (!empty($package) && false === strpos($package, ':')) {
                 $package .= ':*';
             }
         }

@@ -9,7 +9,8 @@ require_once __DIR__ . '/releases.php';
 
 task('test', function () {
      // writeln(get('httpuser'));
-     // writeln(get('current_path'));
+     print_r(get('option_packages'));
+     writeln(get('hostname'));
      writeln(get('admin_password'));
      writeln(get('database_name_prefix'));
      // writeln(get('database_name'));

@@ -12,6 +12,7 @@ task('test', function () {
      // writeln(get('current_path'));
      writeln(get('admin_password'));
      writeln(get('database_name_prefix'));
+     // writeln(get('database_name'));
      // writeln(getenv());
 
     // writeln(has('previous_release') ? 'true' : 'false');

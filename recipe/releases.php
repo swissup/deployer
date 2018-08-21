@@ -5,7 +5,7 @@ namespace Deployer;
 require_once __DIR__ . '/bin/sudo.php';
 
 set('database_name_prefix', function () {
-    return 'db' . crc32(get('hostname'));
+    return 'database' . hash('crc32', get('hostname'));
     // return 'db';
     // return 'db_' . preg_replace("/[^A-Za-z0-9 ]/", '_', get('hostname')) . '_';
 });

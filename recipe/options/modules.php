@@ -2,7 +2,7 @@
 
 namespace Deployer;
 
-require_once __DIR__ . '/packages.php';
+require_once CUSTOM_RECIPE_DIR . '/options/packages.php';
 
 option(
     'modules',

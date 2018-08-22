@@ -4,7 +4,7 @@ namespace Deployer;
 
 require 'recipe/common.php';
 
-require_once __DIR__ . '/../magento2.php';
+require_once CUSTOM_RECIPE_DIR . '/magento2.php';
 
 desc('Backing up');
 task('magento2:backup', function () {

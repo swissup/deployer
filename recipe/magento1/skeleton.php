@@ -1,7 +1,7 @@
 <?php
 namespace Deployer;
 
-require_once __DIR__ . '/../magento1.php';
+require_once CUSTOM_RECIPE_DIR . '/magento1.php';
 
 // set('shared_dirs', []);
 // set('shared_files', []);

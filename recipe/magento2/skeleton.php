@@ -1,7 +1,7 @@
 <?php
 namespace Deployer;
 
-require_once __DIR__ . '/../magento2.php';
+require_once CUSTOM_RECIPE_DIR . '/magento2.php';
 
 // set('shared_dirs', []);
 // set('shared_files', []);
@@ -91,7 +91,7 @@ task('magento2:skeleton:maintenance:disable', function () {
 
 // after packages:install
 desc('Disabling all swissup magento 2 modules');
-task('magento2:release:modules:disabled:all', function () {
+task('magento2:deploy:modules:disabled:all', function () {
     $status = run("cd {{release_path}} && {{bin/magento}} module:status");
     $rm = 'None';
     $status = str_replace($rm, '', $status);
@@ -209,25 +209,24 @@ task('magento2:skeleton:create', function () {
 
 desc('Deploy full magento 2 demo for magento2:modules');
 task('magento2:skeleton:prepare', [
-    'magento2:release:check',
+    'magento2:deploy:check',
     'deploy:prepare',
-    'magento2:release:deploy',
-    'magento2:release:git:clone',
+    'magento2:deploy:deploy',
+    'magento2:deploy:git:clone',
     'deploy:shared',
-    'magento2:release:auth_json',
-    'magento2:release:composer:stability_dev',
-    'magento2:release:composer:install',
-    'magento2:release:create:db',
-    'magento2:release:setup:install',
-    'magento2:release:sampledata:install',
-    'magento2:release:packages:install',
-    'magento2:release:modules:disabled:all',
-    'magento2:release:post:install',
-    'magento2:release:maintenance:enable',
-    'magento2:usermod',
-    'magento2:release:permissions',
-    'magento2:release:success',
-    'magento2:release:deploy:symlink'
+    'magento2:deploy:composer:preinstall',
+    'magento2:deploy:composer:install',
+    'magento2:deploy:create_db',
+    'magento2:setup:install',
+    'magento2:deploy:sampledata:install',
+    'magento2:deploy:composer:packages',
+    'magento2:deploy:modules:disabled:all',
+    'magento2:deploy:post:install',
+    'magento2:maintenance:enable',
+    'magento2:deploy:usermod',
+    'magento2:deploy:permissions',
+    'magento2:success',
+    'magento2:deploy:deploy:symlink'
 ])->setPrivate();
 
 after('magento2:skeleton:create', 'magento2:skeleton:prepare');

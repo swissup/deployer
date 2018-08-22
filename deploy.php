@@ -2,12 +2,16 @@
 
 namespace Deployer;
 
-require_once __DIR__ . '/recipe/common.php';
-// require_once __DIR__ . '/recipe/skeleton/magento1.php';
-// require_once __DIR__ . '/recipe/skeleton/magento2.php';
-// require_once __DIR__ . '/recipe/magento1/backup.php';
-// require_once __DIR__ . '/recipe/magento2/backup.php';
-require_once __DIR__ . '/recipe/magento2.php';
+define('CUSTOM_RECIPE_DIR', realpath(__DIR__ . '/recipe/'));
+
+require_once CUSTOM_RECIPE_DIR . '/common.php';
+// require_once CUSTOM_RECIPE_DIR . '/magento1/skeleton.php';
+// require_once CUSTOM_RECIPE_DIR . '/magento1/backup.php';
+// require_once CUSTOM_RECIPE_DIR . '/magento1.php';
+// require_once CUSTOM_RECIPE_DIR . '/magento2/skeleton.php';
+// require_once CUSTOM_RECIPE_DIR . '/magento2/backup.php';
+require_once CUSTOM_RECIPE_DIR . '/magento2.php';
+
 
 set('keep_releases', 5);
 set('default_stage', 'production');

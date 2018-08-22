@@ -2,7 +2,7 @@
 
 namespace Deployer;
 
-require_once __DIR__ . '/bin/sudo.php';
+require_once CUSTOM_RECIPE_DIR . '/bin/sudo.php';
 
 set('database_name_prefix', function () {
     return 'database' . hash('crc32', get('hostname'));

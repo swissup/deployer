@@ -45,12 +45,19 @@ store.com:
   base_url: http://store.com
   writable_use_sudo: true
   add_sample_data: true
+  packages: swissup/firecheckout
 ```
 
 Check your ssh connection
 
 ```bash
-➜ dep ssh
+➜ dep config:hosts
+➜ dep config:dump store.com
+➜ dep ssh store -v
+[ec2-user@ip-10-149-126-215 current]$ pwd
+/var/www/html
+[ec2-user@ip-10-149-126-215 current]$ exit
+Connection to store.com closed.
 ```
 
 ### Usage
@@ -58,8 +65,8 @@ Check your ssh connection
 #### Init magento 2
 
 ~~~bash
-➜ dep magento2:init
-➜ dep magento2:init --packages=swissup/ajaxpro,swissup/ajaxlayerednavigation,swissup/firecheckout,swissup/askit,swissup/testimonials,swissup/sold-together,swissup/rich-snippets,swissup/reviewreminder,swissup/pro-labels,swissup/highlight,swissup/fblike,swissup/easytabs,swissup/easy-slide,swissup/easyflags,swissup/easycatalogimg,swissup/easybanner,swissup/attributepages,swissup/ajaxsearch,swissup/address-field-manager -v
+➜ dep magento2:init store.com
+➜ dep magento2:init --packages=swissup/ajaxpro,swissup/ajaxlayerednavigation,swissup/firecheckout,swissup/askit,swissup/testimonials,swissup/sold-together,swissup/rich-snippets,swissup/reviewreminder,swissup/pro-labels,swissup/highlight,swissup/fblike,swissup/easytabs,swissup/easy-slide,swissup/easyflags,swissup/easycatalogimg,swissup/easybanner,swissup/attributepages,swissup/ajaxsearch,swissup/address-field-manager -v store.com
 
 ➜ dep magento2:releases:list
 ~~~
@@ -82,7 +89,7 @@ If every think goes well, deployer will create next structure on remote host in 
  - releases dir contains deploy releases of magento application,
  - shared dir contains config, var and pub resouyrces which will be symlinked to each release
  - current is symlink to last release,
- - .dep dir contains special metadata for deployer (releases log, deploy.log file, etc).
+ - .dep dir contains special metadata for deployer (lock, releases log, deploy.log file, etc).
 
 Configure your server to serve files from the current folder. For example if you are using [nginx](https://github.com/magento/magento2/blob/2.2-develop/nginx.conf.sample#L11) next:
 

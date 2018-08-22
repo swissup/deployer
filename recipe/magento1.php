@@ -3,13 +3,13 @@ namespace Deployer;
 
 require 'recipe/magento.php';
 
-require_once __DIR__ . '/bin/composer.php';
-require_once __DIR__ . '/bin/jq.php';
-require_once __DIR__ . '/bin/magerun.php';
-require_once __DIR__ . '/bin/mysql.php';
-require_once __DIR__ . '/bin/sudo.php';
-require_once __DIR__ . '/options/packages.php';
-require_once __DIR__ . '/options/modules.php';
+require_once CUSTOM_RECIPE_DIR . '/bin/composer.php';
+require_once CUSTOM_RECIPE_DIR . '/bin/jq.php';
+require_once CUSTOM_RECIPE_DIR . '/bin/magerun.php';
+require_once CUSTOM_RECIPE_DIR . '/bin/mysql.php';
+require_once CUSTOM_RECIPE_DIR . '/bin/sudo.php';
+require_once CUSTOM_RECIPE_DIR . '/options/packages.php';
+require_once CUSTOM_RECIPE_DIR . '/options/modules.php';
 
 set('shared_dirs', []);
 set('shared_files', []);

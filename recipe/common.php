@@ -4,8 +4,24 @@ namespace Deployer;
 
 require 'recipe/common.php';
 
-require_once __DIR__ . '/debug.php';
-require_once __DIR__ . '/releases.php';
+require_once CUSTOM_RECIPE_DIR . '/debug.php';
+require_once CUSTOM_RECIPE_DIR . '/releases.php';
+
+// set('httpuser', 'apache');
+set('httpuser', function () {
+    return run("ps aux | grep -E '[a]pache|[h]ttpd|[_]www|[w]ww-data|[n]ginx' "
+        . "| grep -v root | head -1 | cut -d\  -f1");
+});
+
+set('owner', function () {
+    // return getenv('USER');
+    return run('whoami');
+    return run("ls -ld {{release_path}} | awk '{print $3}'");
+});
+
+task('m2:bin/magento', function () {
+    writeln(run("cd {{release_path}} && {{bin/magento}} --version"));
+});
 
 task('test', function () {
      // writeln(get('httpuser'));

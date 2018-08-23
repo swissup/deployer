@@ -63,13 +63,13 @@ task('magento2:init', [
     'deploy:lock',
     'magento2:deploy:release',////////////////
     'magento2:deploy:update_code',
-    'magento2:deploy:composer:preinstall',
-    'magento2:deploy:composer:install',
+    'magento2:deploy:vendors:preinstall',
+    'magento2:deploy:vendors:install',
     'magento2:deploy:create_db',
     'magento2:setup:install',
     'magento2:setup:upgrade',
     'magento2:deploy:sampledata:install',
-    'magento2:deploy:composer:packages',
+    'magento2:deploy:vendors:update',
     'magento2:deploy:post:install', //<--
     'magento2:deploy:usermod',
     'magento2:deploy:permissions',
@@ -91,13 +91,13 @@ task('magento2:deploy', [
     'magento2:deploy:release',////////////////
     'magento2:deploy:update_code',
     'deploy:shared',// <--
-    'magento2:deploy:composer:preinstall',
-    'magento2:deploy:composer:install',
+    'magento2:deploy:vendors:preinstall',
+    'magento2:deploy:vendors:install',
     'magento2:maintenance:enable',
     // 'magento2:app:config:import',
     'magento2:setup:upgrade',
     'magento2:deploy:sampledata:install',
-    'magento2:deploy:composer:packages',
+    'magento2:deploy:vendors:update',
     'magento2:deploy:post:install', // <--
     'magento2:deploy:usermod',
     'magento2:deploy:permissions',

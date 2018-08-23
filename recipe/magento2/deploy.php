@@ -19,7 +19,7 @@ require_once CUSTOM_RECIPE_DIR . '/options/modules.php';
 require_once CUSTOM_RECIPE_DIR . '/magento2/deploy/check.php';
 require_once CUSTOM_RECIPE_DIR . '/magento2/deploy/release.php';
 require_once CUSTOM_RECIPE_DIR . '/magento2/deploy/update_code.php';
-require_once CUSTOM_RECIPE_DIR . '/magento2/deploy/composer.php';
+require_once CUSTOM_RECIPE_DIR . '/magento2/deploy/vendors.php';
 require_once CUSTOM_RECIPE_DIR . '/magento2/deploy/create_db.php';
 require_once CUSTOM_RECIPE_DIR . '/magento2/deploy/sampledata.php';
 require_once CUSTOM_RECIPE_DIR . '/magento2/deploy/permissions.php';
@@ -62,8 +62,8 @@ task('magento2:setup:install', function () {
     ]);
 })->setPrivate();
 
-// before('magento2:deploy:composer:install', 'magento2:deploy:composer:preinstall');
-// before('magento2:deploy:sampledata:install', 'magento2:deploy:composer:preinstall');
+// before('magento2:deploy:vendors:install', 'magento2:deploy:vendors:preinstall');
+// before('magento2:deploy:sampledata:install', 'magento2:deploy:vendors:preinstall');
 //
 task('magento2:setup:upgrade', function () {
     run("cd {{release_path}} && {{bin/magento}} setup:upgrade", [

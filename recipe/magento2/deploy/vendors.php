@@ -5,7 +5,7 @@ namespace Deployer;
 require_once CUSTOM_RECIPE_DIR . '/bin/composer.php';
 
 desc('Create auth.json if not exist and add repo.magento.com credentials. Set composer minimum-stability="dev"');
-task('magento2:deploy:composer:preinstall', function () {
+task('magento2:deploy:vendors:preinstall', function () {
     // $username = get('magento_composer_username');
     // $password = get('magento_composer_password');
     try {
@@ -18,24 +18,25 @@ task('magento2:deploy:composer:preinstall', function () {
     }
     run("cd {{release_path}} && {{bin/composer}} config http-basic.repo.magento.com $username $password");
     run("cd {{release_path}} && {{bin/composer}} config repositories.0 composer https://repo.magento.com");
+
     run("cd {{release_path}} && {{bin/composer}} config minimum-stability dev");
+
+    run("cd {{release_path}} && {{bin/composer}} config repositories.swissup composer https://docs.swissuplabs.com/packages/");
 })->setPrivate();
 
 ////////////////////////////////////////////////////////////////////////////////
 desc('Run composer install command in current mage 2 instance');
-task('magento2:deploy:composer:install', function () {
+task('magento2:deploy:vendors:install', function () {
     run("cd {{release_path}} && {{bin/composer}} install {{composer_params}}");
 })->setPrivate();
 
 ////////////////////////////////////////////////////////////////////////////////
 desc('Install swissup packages (composer require)');
-// task('magento2:deploy:composer:packages', function () {
-task('magento2:deploy:composer:packages', function () {
+task('magento2:deploy:vendors:update', function () {
     $packages = get('option_packages');
     if (empty($packages)) {
         return;
     }
-    run("cd {{release_path}} && {{bin/composer}} config repositories.swissup composer https://docs.swissuplabs.com/packages/");
     foreach ($packages as $package) {
         if (empty($package)) {
             continue;
@@ -60,4 +61,4 @@ task('magento2:deploy:composer:packages', function () {
     // ]);
 })->setPrivate();
 
-after('magento2:deploy:composer:packages', 'magento2:setup:upgrade');
+after('magento2:deploy:vendors:update', 'magento2:setup:upgrade');

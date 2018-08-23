@@ -3,6 +3,17 @@
   mysql_user: user
   mysql_pass: pass
 
+.magento2-istall-settings: &magento2-istall-settings
+  admin-firstname: John
+  admin-lastname: Doe
+  admin-email: john.doe@gmail.com
+  admin-user: admin
+  backend-frontname: admin
+  language: en_US
+  currency: USD
+  timezone: America/Chicago
+  use-rewrites: 1
+
 swissupdemo.com:
   host: swissupdemo.com
   user: ec2-user
@@ -13,6 +24,7 @@ swissupdemo.com:
   stage: production
   deploy_path: /var/www/html
   <<: *mysql
+  <<: *magento2-istall-settings
   base_url: http://{{hostname}}/releases/{{release}}
 
 swissupdemo.com/test:
@@ -25,5 +37,6 @@ swissupdemo.com/test:
   multiplexing: true
   stage: staging
   <<: *mysql
+  <<: *magento2-istall-settings
   base_url: http://{{hostname}}/current
   add_sample_data: true

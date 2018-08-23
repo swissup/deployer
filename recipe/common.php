@@ -19,10 +19,6 @@ set('owner', function () {
     return run("ls -ld {{release_path}} | awk '{print $3}'");
 });
 
-task('m2:bin/magento', function () {
-    writeln(run("cd {{release_path}} && {{bin/magento}} --version"));
-});
-
 task('test', function () {
      // writeln(get('httpuser'));
      print_r(get('option_packages'));

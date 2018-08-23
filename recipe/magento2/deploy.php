@@ -32,21 +32,21 @@ task('magento2:setup:install', function () {
     $adminPassword = get('admin_password');
 
     $_options = [
-        'admin-firstname'   => 'John',
-        'admin-lastname'    => 'Doe',
-        'admin-email'       => 'john.doe@gmail.com',
-        'admin-user'        => 'admin',
+        'admin-firstname'   => get('admin-firstname'),
+        'admin-lastname'    => get('admin-lastname'),
+        'admin-email'       => get('admin-email'),
+        'admin-user'        => get('admin-user'),
         'admin-password'    => $adminPassword,
         'base-url'          => get('base_url'),
-        'backend-frontname' => 'admin',
+        'backend-frontname' => get('backend-frontname'),
         'db-host'           => get('mysql_host'),
         'db-user'           => get('mysql_user'),
         'db-password'       => get('mysql_pass'),
         'db-name'           => $databaseName,
-        'language'          => 'en_US',
-        'currency'          => 'USD',
-        'timezone'          => 'America/Chicago',
-        'use-rewrites'      => '1',
+        'language'          => get('language'),
+        'currency'          => get('currency'),
+        'timezone'          => get('timezone'),
+        'use-rewrites'      => get('use-rewrites'),
         'cleanup-database'  => '',
         // 'use-sample-data'   => ''
     ];

@@ -4,7 +4,7 @@ Install magento recipe(s) for [deployer](http://deployer.org/)
 ### Example:
 
 <p align="center">
-  <img width="700" src="https://rawgit.com/swissup/deployer/master/example.svg">
+  <img width="980" src="https://rawgit.com/swissup/deployer/master/example.svg">
 </p>
 
 ### Pre-Install
@@ -44,8 +44,8 @@ store.com:
   mysql_pass: pass
   base_url: http://store.com
   writable_use_sudo: true
-  add_sample_data: true
-  packages: swissup/firecheckout
+  add_sample_data: true # install sample data
+  packages: swissup/firecheckout # install custom composer packages
 ```
 
 Check your ssh connection
@@ -53,7 +53,7 @@ Check your ssh connection
 ```bash
 ➜ dep config:hosts
 ➜ dep config:dump store.com
-➜ dep ssh store -v
+➜ dep ssh store.com -v
 [ec2-user@ip-10-149-126-215 current]$ pwd
 /var/www/html
 [ec2-user@ip-10-149-126-215 current]$ exit
@@ -62,12 +62,11 @@ Connection to store.com closed.
 
 ### Usage
 
-#### Init magento 2
+#### Init magento 2 (Install magento 2)
 
 ~~~bash
 ➜ dep magento2:init store.com
-➜ dep magento2:init --packages=swissup/ajaxpro,swissup/ajaxlayerednavigation,swissup/firecheckout,swissup/askit,swissup/testimonials,swissup/sold-together,swissup/rich-snippets,swissup/reviewreminder,swissup/pro-labels,swissup/highlight,swissup/fblike,swissup/easytabs,swissup/easy-slide,swissup/easyflags,swissup/easycatalogimg,swissup/easybanner,swissup/attributepages,swissup/ajaxsearch,swissup/address-field-manager -v store.com
-
+➜ dep magento2:init --packages=swissup/ajaxpro,swissup/ajaxlayerednavigation,swissup/firecheckout -v store.com
 ➜ dep magento2:releases:list
 ~~~
 
@@ -104,28 +103,20 @@ server {
 
 ~~~
 
-Now you will be able to serve your project
+Now you will be able to serve your project.
 
+#### Deploy (Update code)
 
-#### Create magento 1
 ~~~bash
-➜ dep magento:init
-➜ dep magento:init --packages=tm/ajax-pro:\*,tm/ajax-layered-navigation:\*,tm/ajax-search:\*,tm/ask-it:\*,tm/easy-banner:\*,tm/helpdesk:\*,tm/navigation-pro:\*,tm/cache:\*,tm/highlight:\*,tm/pro-labels:\*,tm/review-reminder:\*,tm/sold-together:\*
-
-➜ dep magento:releases:list
+➜ dep magento2:deploy store.com -vv
 ~~~
 
 #### List releasses
 
 ~~~bash
-➜ dep releases:list
-➜ dep releases:list -vv
-~~~
-
-#### Clear all
-
-~~~bash
-➜ dep releases:remove:all
+➜ dep releases:list store.com
+➜ dep releases:list store.com -vv
+➜ dep magento2:releases:list store.com
 ~~~
 
 #### Back up & Rool back
@@ -138,7 +129,21 @@ Now you will be able to serve your project
 ➜ dep magento:rollback --release=193900000000000000
 ~~~
 
-Create skeleton
+#### Create magento 1
+~~~bash
+➜ dep magento:init
+➜ dep magento:init --packages=tm/ajax-pro,tm/ajax-layered-navigation,tm/ajax-search,tm/ask-it,tm/easy-banner,tm/helpdesk,tm/navigation-pro,tm/cache,tm/highlight,tm/pro-labels,tm/review-reminder,tm/sold-together
+
+➜ dep magento:releases:list
+~~~
+
+#### Clear all
+
+~~~bash
+➜ dep releases:remove:all
+~~~
+
+#### Create skeleton
 
 ~~~bash
 

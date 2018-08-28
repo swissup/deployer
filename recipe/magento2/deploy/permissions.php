@@ -27,7 +27,8 @@ task('magento2:deploy:permissions', function () {
         //"{{bin/sudo}} chmod -R g+w {app/etc,pub,var,vendor}",
         "{{bin/sudo}} chmod -R g+w app/etc ",
         "{{bin/sudo}} chmod -R g+w pub",
-        "{{bin/sudo}} chmod -R g+w var"
+        "{{bin/sudo}} chmod -R g+w var",
+        "{{bin/sudo}} chmod -R g+w generated"
     );
     foreach ($commands as $command) {
         run("cd {{release_path}} && " . $command);

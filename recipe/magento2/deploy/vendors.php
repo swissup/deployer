@@ -20,6 +20,8 @@ task('magento2:deploy:vendors:preinstall', function () {
     run("cd {{release_path}} && {{bin/composer}} config repositories.0 composer https://repo.magento.com");
 
     run("cd {{release_path}} && {{bin/composer}} config minimum-stability dev");
+    // run("cd {{release_path}} && {{bin/composer}} config secure-http false");
+    // run("cd {{release_path}} && {{bin/composer}} discard-changes true");
 
     run("cd {{release_path}} && {{bin/composer}} config repositories.swissup composer https://docs.swissuplabs.com/packages/");
 })->setPrivate();

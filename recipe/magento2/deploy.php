@@ -146,4 +146,4 @@ task('magento2:deploy:post:install', [
     'magento2:cache:flush',
     'magento2:cron:run',
     'magento2:disable_static_sign'
-]);
+])->setPrivate();

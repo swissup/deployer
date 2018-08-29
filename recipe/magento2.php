@@ -61,6 +61,7 @@ task('magento2:init', [
     'deploy:info',
     'deploy:prepare',
     'deploy:lock',
+    'magento2:deploy:check',
     'magento2:deploy:release',////////////////
     'magento2:deploy:update_code',
     'magento2:deploy:vendors:preinstall',
@@ -88,6 +89,7 @@ task('magento2:deploy', [
     'deploy:info',
     'deploy:prepare',
     'deploy:lock',
+    'magento2:deploy:check',
     'magento2:deploy:release',////////////////
     'magento2:deploy:update_code',
     'deploy:shared',// <--

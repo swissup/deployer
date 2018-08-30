@@ -37,20 +37,22 @@ set('clear_paths', [
 set('copy_dirs', function () {
     $vendors = [];
 
-    $paths = [
-        'app/code',
-        'app/design/frontend',
-        'app/design/adminhtml',
-        'app/i18n'
-    ];
-    foreach ($paths as $path) {
-        $_vendors = explode("\n", run("ls {{current_path}}/{$path}"));
-        $_vendors = array_filter($_vendors);
-        $_vendors = array_filter($_vendors, function ($vendor) {
-            return 'Magento' !== $vendor;
-        });
-        foreach ($_vendors as $vendor) {
-            $vendors[] =  $path .'/' . $vendor;
+    if (has('previous_release')) {
+        $paths = [
+            'app/code',
+            'app/design/frontend',
+            'app/design/adminhtml',
+            'app/i18n'
+        ];
+        foreach ($paths as $path) {
+            $_vendors = explode("\n", run("ls {{previous_release}}/{$path}"));
+            $_vendors = array_filter($_vendors);
+            $_vendors = array_filter($_vendors, function ($vendor) {
+                return 'Magento' !== $vendor;
+            });
+            foreach ($_vendors as $vendor) {
+                $vendors[] =  $path .'/' . $vendor;
+            }
         }
     }
 

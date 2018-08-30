@@ -2,8 +2,6 @@
 
 namespace Deployer;
 
-require 'recipe/common.php';
-
 require_once CUSTOM_RECIPE_DIR . '/magento2.php';
 
 desc('Backing up');
@@ -44,8 +42,12 @@ task('magento2:snapshot:list', function () {
     // writeln(run('cd {{release_path}} && {{bin/magento}} info:backups:list'));
     // writeln(run("cd {{release_path}} && ls var/backups/*_db.sql | awk '{print $1}'"));
     $snapshots = get('magento2_snapshot_list');
-    foreach ($snapshots as $snapshot) {
-        writeln($snapshot . ' | ' . date('Y-m-d H:i:s', $snapshot));
+    if (count($snapshots) == 0) {
+        writeln('<info>Nothing found</info>');
+    } else {
+        foreach ($snapshots as $snapshot) {
+            writeln($snapshot . ' | ' . date('Y-m-d H:i:s', $snapshot));
+        }
     }
 });
 before('magento2:snapshot:list', 'release:set');

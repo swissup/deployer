@@ -2,8 +2,6 @@
 
 namespace Deployer;
 
-require 'recipe/common.php';
-
 require_once CUSTOM_RECIPE_DIR . '/common.php';
 require_once CUSTOM_RECIPE_DIR . '/releases.php';
 

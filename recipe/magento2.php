@@ -1,7 +1,6 @@
 <?php
 namespace Deployer;
 
-require_once 'recipe/common.php';
 require_once CUSTOM_RECIPE_DIR . '/magento2/release.php';
 require_once CUSTOM_RECIPE_DIR . '/magento2/deploy.php';
 require_once CUSTOM_RECIPE_DIR . '/magento2/success.php';
@@ -35,6 +34,28 @@ set('clear_paths', [
     // 'pub/static/*'
 ]);
 // set('writable_dirs', ['var']);
+set('copy_dirs', function () {
+    $vendors = [];
+
+    $paths = [
+        'app/code',
+        'app/design/frontend',
+        'app/design/adminhtml',
+        'app/i18n'
+    ];
+    foreach ($paths as $path) {
+        $_vendors = explode("\n", run("ls {{current_path}}/{$path}"));
+        $_vendors = array_filter($_vendors);
+        $_vendors = array_filter($_vendors, function ($vendor) {
+            return 'Magento' !== $vendor;
+        });
+        foreach ($_vendors as $vendor) {
+            $vendors[] =  $path .'/' . $vendor;
+        }
+    }
+
+    return $vendors;
+});
 
 task('magento2:init:failed', function () {
     if (test("[ -h {{deploy_path}}/release ]")) {
@@ -95,6 +116,7 @@ task('magento2:deploy', [
     'deploy:shared',// <--
     'magento2:deploy:vendors:preinstall',
     'magento2:deploy:vendors:install',
+    'deploy:copy_dirs',
     'magento2:maintenance:enable',
     // 'magento2:app:config:import',
     'magento2:setup:upgrade',

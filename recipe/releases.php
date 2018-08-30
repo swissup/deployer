@@ -43,6 +43,7 @@ task('release:set', function () {
     $release = input()->getOption('release');
     if (empty($release)) {
         writeln("<error>That task required option --release=[RELEASE]</error>");
+        writeln("Use default: {{release_path}}");
     } else {
         $list = get('releases_list_all');
         if (in_array($release, $list)) {

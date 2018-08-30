@@ -21,10 +21,11 @@ set('owner', function () {
 
 task('test', function () {
      // writeln(get('httpuser'));
-     print_r(get('option_packages'));
-     writeln(get('hostname'));
-     writeln(get('admin_password'));
-     writeln(get('database_name_prefix'));
+     print_r(get('copy_dirs'));
+     // print_r(get('option_packages'));
+     // writeln(get('hostname'));
+     // writeln(get('admin_password'));
+     // writeln(get('database_name_prefix'));
      // writeln(get('database_name'));
      // writeln(getenv());
 

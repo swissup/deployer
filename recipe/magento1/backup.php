@@ -2,8 +2,6 @@
 
 namespace Deployer;
 
-require 'recipe/common.php';
-
 require_once CUSTOM_RECIPE_DIR . '/magento1.php';
 require_once CUSTOM_RECIPE_DIR . '/releases.php';
 

@@ -67,7 +67,7 @@ Connection to store.com closed.
 ~~~bash
 ➜ dep magento2:init store.com
 ➜ dep magento2:init --packages=swissup/ajaxpro,swissup/ajaxlayerednavigation,swissup/firecheckout -v store.com
-➜ dep magento2:releases:list
+➜ dep magento2:releases:list store.com
 ~~~
 
 If every think goes well, deployer will create next structure on remote host in deploy_path:
@@ -122,11 +122,12 @@ Now you will be able to serve your project.
 #### Back up & Rool back
 
 ~~~bash
-➜ dep magento:backup --release=193900000000000000
-➜ dep magento:snapshot:list --release=193900000000000000
+➜ dep magento2:backup
+➜ dep magento2:snapshot:list
 1531827423 | 2018-07-17 14:37:03
-➜ dep magento:rollback --release=193900000000000000 --snapshot=1531827423
-➜ dep magento:rollback --release=193900000000000000
+➜ dep magento2:rollback --snapshot=1531827423
+➜ dep magento2:rollback --release=193900000000000000 --snapshot=1531827423
+➜ dep magento2:rollback --release=193900000000000000
 ~~~
 
 #### Create magento 1

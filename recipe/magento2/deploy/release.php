@@ -34,4 +34,9 @@ task('magento2:deploy:release', function () {
     run("cd {{deploy_path}} && if [ -h release ]; then rm release; fi");
     run("cd {{deploy_path}} && {{bin/symlink}} $releasePath release");
     set('release_path', $releasePath);
+
+    $releasesList = get('magento2_releases_list');
+    if (isset($releasesList[1])) {
+        set('previous_release', "{{deploy_path}}/releases/{$releasesList[1]}");
+    }
 })->setPrivate();

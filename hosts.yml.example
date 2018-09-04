@@ -31,7 +31,7 @@ swissupdemo.com/test:
   host: swissupdemo.com
   user: ec2-user
   port: 22
-  identityFile: ~/.ssh/magentodemoswissuplabs.pem
+  identityFile: ~/.ssh/key.pem
   deploy_path: /var/www/html/test
   forwardAgent: true
   multiplexing: true

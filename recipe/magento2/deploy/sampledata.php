@@ -47,6 +47,6 @@ task('magento2:deploy:sampledata:install', function () {
     //@todo split after task
     // run("cd {{release_path}} && {{bin/sudo}} rm -rf var/cache/* var/page_cache/* var/generation/*");
     run("cd {{release_path}} && {{bin/magento}} setup:upgrade", [
-        'timeout' => 600
+        'timeout' => 1000
     ]);
 })->setPrivate();

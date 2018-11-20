@@ -54,7 +54,7 @@ task('magento2:deploy:vendors:update', function () {
     $packages = implode(' ', $packages);
     $packages = str_replace(':*', '', $packages);
 
-    run("cd {{release_path}} && {{bin/composer}} update $packages --ignore-platform-reqs {{composer_params}}", [
+    run("cd {{release_path}} && {{bin/composer}} update $packages --ignore-platform-reqs", [
         'timeout' => 600
     ]);
     // run("cd {{release_path}} && {{bin/composer}} update {{composer_params}}");

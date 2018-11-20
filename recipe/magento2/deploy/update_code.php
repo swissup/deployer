@@ -37,7 +37,9 @@ task('magento2:deploy:update_code', function () {
             run("{{bin/git}} clone $at --recursive -q $repository {{release_path}} 2>&1");
         }
     } else {
-        run("{{bin/git}} clone $at $depth --recursive -q $repository {{release_path}} 2>&1");
+        run("{{bin/git}} clone $at $depth --recursive -q $repository {{release_path}} 2>&1", [
+            'timeout' => 600
+        ]);
     }
     if (!empty($tag)) {
         run("cd {{release_path}} && {{bin/git}} checkout $tag");

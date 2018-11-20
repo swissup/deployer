@@ -230,6 +230,7 @@ set('option_modules', function () {
                         } else {
                             $vendor = 'Swissup';
                         }
+                        $module = str_replace('module-', '', $module);
                         $module = str_replace(' ', '', ucwords(str_replace('_', ' ', $module)));
                         $module = str_replace(' ', '', ucwords(str_replace('-', ' ', $module)));
                         $res[] = $vendor . "_" . $module;

@@ -62,5 +62,3 @@ task('magento2:deploy:vendors:update', function () {
     //     'timeout' => 600
     // ]);
 })->setPrivate();
-
-after('magento2:deploy:vendors:update', 'magento2:setup:upgrade');

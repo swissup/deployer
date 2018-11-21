@@ -94,6 +94,7 @@ task('magento2:init', [
     'magento2:setup:upgrade',
     'magento2:deploy:sampledata:install',
     'magento2:deploy:vendors:update',
+    'magento2:setup:upgrade',
     'magento2:deploy:post:install', //<--
     'magento2:deploy:usermod',
     'magento2:deploy:permissions',
@@ -124,6 +125,7 @@ task('magento2:deploy', [
     'magento2:setup:upgrade',
     'magento2:deploy:sampledata:install',
     'magento2:deploy:vendors:update',
+    'magento2:setup:upgrade',
     'magento2:deploy:post:install', // <--
     'magento2:deploy:usermod',
     'magento2:deploy:permissions',

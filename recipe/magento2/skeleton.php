@@ -220,6 +220,7 @@ task('magento2:skeleton:prepare', [
     'magento2:setup:install',
     'magento2:deploy:sampledata:install',
     'magento2:deploy:vendors:update',
+    'magento2:setup:upgrade',
     'magento2:deploy:modules:disabled:all',
     'magento2:deploy:post:install',
     'magento2:maintenance:enable',

@@ -14,12 +14,13 @@ require_once CUSTOM_RECIPE_DIR . '/options/packages.php';
 require_once CUSTOM_RECIPE_DIR . '/options/modules.php';
 
 require_once CUSTOM_RECIPE_DIR . '/magento2/deploy/check.php';
+require_once CUSTOM_RECIPE_DIR . '/magento2/deploy/create_db.php';
+require_once CUSTOM_RECIPE_DIR . '/magento2/deploy/modules.php';
+require_once CUSTOM_RECIPE_DIR . '/magento2/deploy/permissions.php';
 require_once CUSTOM_RECIPE_DIR . '/magento2/deploy/release.php';
+require_once CUSTOM_RECIPE_DIR . '/magento2/deploy/sampledata.php';
 require_once CUSTOM_RECIPE_DIR . '/magento2/deploy/update_code.php';
 require_once CUSTOM_RECIPE_DIR . '/magento2/deploy/vendors.php';
-require_once CUSTOM_RECIPE_DIR . '/magento2/deploy/create_db.php';
-require_once CUSTOM_RECIPE_DIR . '/magento2/deploy/sampledata.php';
-require_once CUSTOM_RECIPE_DIR . '/magento2/deploy/permissions.php';
 
 desc('Install magerun 2 (bin/magento setup:install)');
 task('magento2:setup:install', function () {

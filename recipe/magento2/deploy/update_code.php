@@ -17,24 +17,31 @@ task('magento2:deploy:update_code', function () {
     if (input()->hasOption('tag')) {
         $tag = input()->getOption('tag');
     }
+    $releases = get('magento2_releases_list');
     $at = '';
     if (!empty($tag)) {
         $at = "-b $tag";
     } elseif (!empty($branch)) {
         $at = "-b $branch";
+    } elseif ($gitCache && isset($releases[1])) {
+        $tag = run("cd {{deploy_path}}/releases/{$releases[1]} && {{bin/git}} tag -l --points-at HEAD");
+        $at = "-b $tag";
     } else {
         $tag = get('magento2_repository_last_tag');
         $at = "-b $tag";
     }
-    $releases = get('magento2_releases_list');
+
     if ($gitCache && isset($releases[1])) {
         try {
             run(
                 "{{bin/git}} clone $at --recursive -q --reference {{deploy_path}}/releases/{$releases[1]} --dissociate "
-                . "$repository  {{release_path}} 2>&1"
+                . "$repository  {{release_path}} 2>&1",
+                ['timeout' => 600]
             );
         } catch (RuntimeException $exc) {
-            run("{{bin/git}} clone $at --recursive -q $repository {{release_path}} 2>&1");
+            run("{{bin/git}} clone $at --recursive -q $repository {{release_path}} 2>&1", [
+                'timeout' => 600
+            ]);
         }
     } else {
         run("{{bin/git}} clone $at $depth --recursive -q $repository {{release_path}} 2>&1", [

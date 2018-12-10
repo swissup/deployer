@@ -23,7 +23,7 @@ task('magento2:deploy:update_code', function () {
         $at = "-b $tag";
     } elseif (!empty($branch)) {
         $at = "-b $branch";
-    } elseif ($gitCache && isset($releases[1])) {
+    } elseif (has('previous_release') || ($gitCache && isset($releases[1]))) {
         $tag = run("cd {{deploy_path}}/releases/{$releases[1]} && {{bin/git}} tag -l --points-at HEAD");
         $at = "-b $tag";
     } else {

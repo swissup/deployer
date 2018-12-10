@@ -14,6 +14,10 @@ task('magento2:deploy:release', function () {
                 $tag = str_pad($tag, 4, '0');
             }
         }
+        $currentReleaseExist = test('[ -h {{deploy_path}}/current ]');
+        if ($currentReleaseExist) {
+            $tag = run("cd {{deploy_path}}/current && {{bin/git}} tag -l --points-at HEAD");
+        }
         if (empty($tag)) {
             $tag = get('magento2_repository_last_tag');
         }

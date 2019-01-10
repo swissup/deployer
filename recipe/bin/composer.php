@@ -3,6 +3,7 @@
 namespace Deployer;
 
 set('composer_params', ' --verbose --optimize-autoloader --no-progress --no-interaction');
+set('php_cli_params', '-d memory_limit=-1');
 
 set('bin/composer', function () {
     if (commandExist('composer')) {
@@ -12,7 +13,7 @@ set('bin/composer', function () {
         run("cd {{deploy_path}} && if [ -f composer.phar ]; then curl -sS https://getcomposer.org/installer | {{bin/php}}; fi");
         $composer = '{{deploy_path}}/composer.phar';
     }
-    return '{{bin/php}} ' . $composer;
+    return '{{bin/php}} {{php_cli_params}} ' . $composer;
 });
 
 desc('Remove composer[json|lock] and vendor dir in current');

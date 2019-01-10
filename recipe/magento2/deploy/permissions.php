@@ -22,7 +22,7 @@ task('magento2:deploy:permissions', function () {
         "{{bin/sudo}} find . -type d -exec chmod 770 {} \; ",
         "{{bin/sudo}} find . -type f -exec chmod 660 {} \; ",
         //"{{bin/sudo}} find . -type l -exec chmod 660 {} \; ",
-         "{{bin/sudo}} chmod u+x {{bin/magento}} ",
+         "{{bin/sudo}} chmod u+x bin/magento",
         //"{{bin/sudo}} chmod g+x {{bin/magento}} ",
         //"{{bin/sudo}} chmod -R g+w {app/etc,pub,var,vendor}",
         "{{bin/sudo}} chmod -R g+w app/etc ",

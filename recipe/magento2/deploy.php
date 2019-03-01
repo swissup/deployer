@@ -17,6 +17,7 @@ require_once CUSTOM_RECIPE_DIR . '/magento2/deploy/check.php';
 require_once CUSTOM_RECIPE_DIR . '/magento2/deploy/create_db.php';
 require_once CUSTOM_RECIPE_DIR . '/magento2/deploy/modules.php';
 require_once CUSTOM_RECIPE_DIR . '/magento2/deploy/permissions.php';
+require_once CUSTOM_RECIPE_DIR . '/magento2/deploy/prepare.php';
 require_once CUSTOM_RECIPE_DIR . '/magento2/deploy/release.php';
 require_once CUSTOM_RECIPE_DIR . '/magento2/deploy/sampledata.php';
 require_once CUSTOM_RECIPE_DIR . '/magento2/deploy/update_code.php';

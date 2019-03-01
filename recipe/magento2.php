@@ -83,6 +83,7 @@ desc('Init new magento2 demo. Options --packages=[], --tag=[]');
 task('magento2:init', [
     'deploy:info',
     'deploy:prepare',
+    'magento2:deploy:apache:prepare',
     'deploy:lock',
     'magento2:deploy:check',
     'magento2:deploy:release',////////////////
@@ -112,6 +113,7 @@ desc('Deploy magento2');
 task('magento2:deploy', [
     'deploy:info',
     'deploy:prepare',
+    'magento2:deploy:apache:prepare',
     'deploy:lock',
     'magento2:deploy:check',
     'magento2:deploy:release',////////////////

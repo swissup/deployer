@@ -1,7 +1,7 @@
 # Deployer
 Install magento recipe(s) for [deployer](http://deployer.org/)
 
-### Example:
+### Usage Example:
 
 <p align="center">
   <img width="980" src="https://rawgit.com/swissup/deployer/master/example.svg">
@@ -24,8 +24,8 @@ Install magento recipe(s) for [deployer](http://deployer.org/)
 Clone this repository
 
 ```bash
-➜ git clone git@github.com:swissup/deployer.git
-➜ cd deployer
+➜ git clone git@github.com:swissup/deployer-recipes.git
+➜ cd deployer-recipes
 ➜ cp hosts.yml.example hosts.yml
 ```
 Add your credentials to hosts.yml
@@ -141,7 +141,7 @@ Now you will be able to serve your project.
 #### Clear all
 
 ~~~bash
-➜ dep releases:remove:all
+➜ dep releases:remove:all [hostname]
 ~~~
 
 #### Create skeleton

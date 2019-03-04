@@ -1,3 +1,12 @@
+.swissupdemo: &swissupdemo
+  host: swissupdemo.com
+  user: ec2-user
+  port: 22
+  identityFile: ~/.ssh/key.pem
+  # forwardAgent: true
+  # multiplexing: true
+  deploy_path: /var/www/html
+
 .mysql: &mysql
   mysql_host: 127.0.0.1
   mysql_user: user
@@ -15,28 +24,18 @@
   use-rewrites: 1
 
 swissupdemo.com:
-  host: swissupdemo.com
-  user: ec2-user
-  port: 22
-  identityFile: ~/.ssh/key.pem
-  forwardAgent: true
-  multiplexing: true
-  stage: production
-  deploy_path: /var/www/html
+  <<: *swissupdemo
   <<: *mysql
   <<: *magento2-istall-settings
+  stage: production
+  deploy_path: /var/www/html
   base_url: http://{{hostname}}/releases/{{release}}
 
 swissupdemo.com/test:
-  host: swissupdemo.com
-  user: ec2-user
-  port: 22
-  identityFile: ~/.ssh/key.pem
-  deploy_path: /var/www/html/test
-  forwardAgent: true
-  multiplexing: true
-  stage: staging
+  <<: *swissupdemo
   <<: *mysql
   <<: *magento2-istall-settings
+  deploy_path: /var/www/html/test
+  stage: staging
   base_url: http://{{hostname}}/current
   add_sample_data: true

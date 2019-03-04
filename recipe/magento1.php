@@ -91,10 +91,10 @@ task('magento:release:check', function () {
 
 desc('Prepare magento release place');
 task('magento:release:deploy', function () {
-    if (input()->hasOption('release')) {
+    if (input()->hasOption('release') && !empty(input()->getOption('release'))) {
         $release = input()->getOption('release');
     } else {
-        if (input()->hasOption('tag')) {
+        if (input()->hasOption('tag') && !empty(input()->getOption('tag'))) {
             $tag = input()->getOption('tag');
         }
         if (empty($tag)) {
@@ -113,6 +113,37 @@ task('magento:release:deploy', function () {
     run("cd {{deploy_path}} && if [ -h release ]; then rm release; fi");
     run("cd {{deploy_path}} && {{bin/symlink}} $releasePath release");
 })->setPrivate();
+
+
+desc('Add .htaccess for redirect to /current');
+task('magento:deploy:apache:prepare', function () {
+
+    $rewriteBase = basename(get('deploy_path'));
+    if (!test('[ -f {{deploy_path}}/.htaccess ]')) {
+        $htaccessContent = "<IfModule mod_rewrite.c>
+
+############################################
+## enable rewrites
+
+    Options +FollowSymLinks
+    RewriteEngine on
+
+############################################
+## rewrite everything else to */current
+    RewriteBase /m1/{$rewriteBase}/
+
+    # RewriteCond %{THE_REQUEST} /current/([^\s?]*) [NC]
+    # RewriteRule ^ %1 [L,NE,R=302]
+    RewriteRule ^((?!current/).*)$ current/ [L,QSA]
+    # RewriteRule ^((?!current/).*)$ current [L,NC]
+</IfModule>";
+
+        run("cd {{deploy_path}} && touch .htaccess");
+        run("cd {{deploy_path}} && echo \"{$htaccessContent}\" > .htaccess");
+    }
+})
+->setPrivate()
+;
 
 /**
  * Update project code
@@ -459,6 +490,7 @@ task('magento:init', [
     'magento:release:git:clone',
     'deploy:shared',
     'deploy:writable',
+    'magento:deploy:apache:prepare',
     'magento:release:sampledata:dir',
     'magento:release:sampledata:db',
     'magento:release:setup:install',

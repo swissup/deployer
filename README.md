@@ -1,4 +1,4 @@
-# Deployer
+# Magento Deployer Recipes
 Install magento recipe(s) for [deployer](http://deployer.org/)
 
 ### Usage Example:

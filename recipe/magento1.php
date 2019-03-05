@@ -11,8 +11,10 @@ require_once CUSTOM_RECIPE_DIR . '/bin/sudo.php';
 require_once CUSTOM_RECIPE_DIR . '/options/packages.php';
 require_once CUSTOM_RECIPE_DIR . '/options/modules.php';
 
-set('shared_dirs', []);
-set('shared_files', []);
+set('shared_dirs', ['var', 'media']);
+set('shared_files', ['app/etc/local.xml']);
+set('writable_dirs', ['var', 'media']);
+
 set('magento_repository', 'git@github.com:OpenMage/magento-mirror.git');
 // set('magento_repository', 'git@github.com:colinmollenhour/magento-lite.git');
 // set('magento_repository', 'git@github.com:speedupmate/Magento-CE-Mirror.git');
@@ -486,10 +488,9 @@ task('magento:init', [
     'deploy:info',
     'magento:release:check',
     'deploy:prepare',
-    'magento:release:deploy',
-    'magento:release:git:clone',
-    'deploy:shared',
-    'deploy:writable',
+    'deploy:lock',
+    'magento:release:deploy', // 'deploy:release',
+    'magento:release:git:clone', // 'deploy:update_code',
     'magento:deploy:apache:prepare',
     'magento:release:sampledata:dir',
     'magento:release:sampledata:db',
@@ -497,10 +498,36 @@ task('magento:init', [
     'magento:release:packages:install',
     'magento:release:permission',
     'magento:release:post:install',
-    // 'magento:argento:activate',
+    'deploy:shared',
+    'deploy:writable',
+    'deploy:unlock',
     'magento:release:success',
-    // 'magento:release:deploy:symlink'
     'deploy:symlink'
 ]);
 
 fail('magento:init', 'magento:init:failed');
+
+/**
+ * Clear cache
+ */
+task('deploy:cache:clear', function () {
+    run("cd {{release_path}} && php -r \"require_once 'app/Mage.php'; umask(0); Mage::app()->cleanCache();\"");
+})->desc('Clear cache');
+
+desc('Deploy your magento project');
+task('magento:deploy', [
+    'deploy:info',
+    'deploy:prepare',
+    'deploy:lock',
+    'magento:release:deploy', // 'deploy:release',
+    'magento:release:git:clone',// 'deploy:update_code',
+    'magento:release:packages:install',
+    'deploy:shared',
+    'deploy:writable',
+    'deploy:cache:clear',
+    'magento:release:success',
+    'deploy:symlink',
+    'deploy:unlock',
+    'cleanup'
+]);
+fail('magento:deploy', 'magento:init:failed');

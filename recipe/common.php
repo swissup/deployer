@@ -21,7 +21,7 @@ set('owner', function () {
 
 task('test', function () {
      // writeln(get('httpuser'));
-     print_r(get('copy_dirs'));
+     print_r(get('shared_dirs'));
      // print_r(get('option_packages'));
      // writeln(get('hostname'));
      // writeln(get('admin_password'));

@@ -1,8 +1,6 @@
 <?php
 namespace Deployer;
 
-require 'recipe/magento.php';
-
 require_once CUSTOM_RECIPE_DIR . '/bin/composer.php';
 require_once CUSTOM_RECIPE_DIR . '/bin/jq.php';
 require_once CUSTOM_RECIPE_DIR . '/bin/magerun.php';

@@ -28,6 +28,5 @@ set('add_sample_data', false);
 set('mysql_host', '127.0.0.1');
 set('mysql_db', false);
 set('packages', false);
-set('magento_version', 2);
 
 inventory('hosts.yml');

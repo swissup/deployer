@@ -5,35 +5,35 @@ require_once CUSTOM_RECIPE_DIR . '/magento2/release.php';
 require_once CUSTOM_RECIPE_DIR . '/magento2/deploy.php';
 require_once CUSTOM_RECIPE_DIR . '/magento2/success.php';
 
+// see hosts.yml.example .magento2-settings
 // Configuration
-set('shared_files', [
-    'app/etc/config.php',
-    'app/etc/env.php',
-    'var/.maintenance.ip',
-]);
-set('shared_dirs', [
-    'var/log',
-    'var/backups',
-    'pub/media',
-]);
-set('writable_dirs', [
-    'var',
-    'pub/static',
-    'pub/media',
-]);
-set('clear_paths', [
-    'var/page_cache/*',
-    'var/cache/*',
-    //'var/composer_home/*',
-    'var/generation/*',
-    // 'var/di/*',
-    // 'var/view_preprocessed/*',
-    // 'var/generation/*',
-    // 'generated/code/*',
-    // 'generated/metadata/*'
-    // 'pub/static/*'
-]);
-// set('writable_dirs', ['var']);
+// set('shared_files', [
+//     'app/etc/config.php',
+//     'app/etc/env.php',
+//     'var/.maintenance.ip',
+// ]);
+// set('shared_dirs', [
+//     'var/log',
+//     'var/backups',
+//     'pub/media',
+// ]);
+// set('writable_dirs', [
+//     'var',
+//     'pub/static',
+//     'pub/media',
+// ]);
+// set('clear_paths', [
+//     'var/page_cache/*',
+//     'var/cache/*',
+//     //'var/composer_home/*',
+//     'var/generation/*',
+//     // 'var/di/*',
+//     // 'var/view_preprocessed/*',
+//     // 'var/generation/*',
+//     // 'generated/code/*',
+//     // 'generated/metadata/*'
+//     // 'pub/static/*'
+// ]);
 set('copy_dirs', function () {
     $vendors = [];
 

@@ -7,7 +7,7 @@ namespace Deployer;
  */
 desc('Updating code magento 2 code (git clone)');
 task('magento2:deploy:update_code', function () {
-    $repository = get('magento2_repository');
+    $repository = get('repository');
     $gitCache = get('git_cache');
     $depth = $gitCache ? '' : '--depth 1';
     $branch = get('branch');

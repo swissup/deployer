@@ -6,13 +6,14 @@ require 'recipe/magento.php';
 require_once CUSTOM_RECIPE_DIR . '/magento1/deploy.php';
 require_once CUSTOM_RECIPE_DIR . '/magento1/release.php';
 
-set('shared_dirs', ['var', 'media']);
-set('shared_files', ['app/etc/local.xml']);
-set('writable_dirs', ['var', 'media']);
-
-set('repository', 'git@github.com:OpenMage/magento-mirror.git');
+// see hosts.yml.example .magento1-settings
+// set('repository', 'git@github.com:OpenMage/magento-mirror.git');
 // set('repository', 'git@github.com:colinmollenhour/magento-lite.git');
 // set('repository', 'git@github.com:speedupmate/Magento-CE-Mirror.git');
+// set('shared_dirs', ['var', 'media']);
+// set('shared_files', ['app/etc/local.xml']);
+// set('writable_dirs', ['var', 'media']);
+
 
 // task('magento:shared', function () {
 //     $sharedPath = "{{deploy_path}}/shared";

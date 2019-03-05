@@ -12,6 +12,36 @@
   mysql_user: user
   mysql_pass: pass
 
+.magento2-settings: &magento2-settings
+  repository: git@github.com:magento/magento2.git
+  shared_dirs:
+    - var/log
+    - var/backups
+    - pub/media
+  shared_files:
+    - app/etc/config.php
+    - app/etc/env.php
+    - var/.maintenance.ip
+  writable_dirs:
+    - var
+    - pub/static
+    - pub/media
+  clear_paths:
+    - var/page_cache/*
+    - var/cache/*
+    - var/generation/*
+
+.magento1-settings: &magento1-settings
+  repository: git@github.com:OpenMage/magento-mirror.git
+  shared_dirs:
+    - var
+    - media
+  shared_files:
+    - app/etc/local.xml
+  writable_dirs:
+    - var
+    - media
+
 .magento2-istall-settings: &magento2-istall-settings
   admin-firstname: John
   admin-lastname: Doe
@@ -26,6 +56,7 @@
 swissupdemo.com:
   <<: *swissupdemo
   <<: *mysql
+  <<: *magento2-settings
   <<: *magento2-istall-settings
   stage: production
   deploy_path: /var/www/html
@@ -34,6 +65,7 @@ swissupdemo.com:
 swissupdemo.com/test:
   <<: *swissupdemo
   <<: *mysql
+  <<: *magento2-settings
   <<: *magento2-istall-settings
   deploy_path: /var/www/html/test
   stage: staging

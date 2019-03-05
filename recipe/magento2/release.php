@@ -5,7 +5,8 @@ namespace Deployer;
 require_once CUSTOM_RECIPE_DIR . '/common.php';
 require_once CUSTOM_RECIPE_DIR . '/releases.php';
 
-set('magento2_repository', 'git@github.com:magento/magento2.git');
+// see hosts.yml.example .magento2-settings
+// set('repository', 'git@github.com:magento/magento2.git');
 
 set('magento2_releases_list', function () {
     run("if [ ! -d {{deploy_path}}/releases ]; then mkdir -p {{deploy_path}}/releases; fi");
@@ -13,7 +14,7 @@ set('magento2_releases_list', function () {
     $list = explode("\n", $list);
     rsort($list);
 
-    $repo = get('magento2_repository');
+    $repo = get('repository');
     $_list = array();
     foreach ($list as $release) {
         $releaseDir = "{{deploy_path}}/releases/{$release}";
@@ -26,7 +27,7 @@ set('magento2_releases_list', function () {
 });
 
 set('magento2_repository_last_tag', function () {
-    $repository = get('magento2_repository');
+    $repository = get('repository');
     // $branch = get('branch');
     // if (empty($branch)) {
     //     $branch = 'master';

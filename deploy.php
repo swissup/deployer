@@ -6,7 +6,7 @@ define('CUSTOM_RECIPE_DIR', realpath(__DIR__ . '/recipe/'));
 
 require_once CUSTOM_RECIPE_DIR . '/common.php';
 // require_once CUSTOM_RECIPE_DIR . '/magento1/skeleton.php';
-// require_once CUSTOM_RECIPE_DIR . '/magento1/backup.php';
+require_once CUSTOM_RECIPE_DIR . '/magento1/backup.php';
 require_once CUSTOM_RECIPE_DIR . '/magento1.php';
 // require_once CUSTOM_RECIPE_DIR . '/magento2/skeleton.php';
 // require_once CUSTOM_RECIPE_DIR . '/magento2.php';

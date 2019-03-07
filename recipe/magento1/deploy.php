@@ -44,13 +44,8 @@ task('magento:deploy:apache:htaccess', function () {
     RewriteEngine on
 
 ############################################
-## rewrite everything else to */current
-    RewriteBase /m1/{$rewriteBase}/
-
-    # RewriteCond %{THE_REQUEST} /current/([^\s?]*) [NC]
-    # RewriteRule ^ %1 [L,NE,R=302]
-    RewriteRule ^((?!current/).*)$ current/ [L,QSA]
-    # RewriteRule ^((?!current/).*)$ current [L,NC]
+## rewrite everything else to current subdir
+    RewriteRule ^$ current [L]
 </IfModule>";
 
         run("cd {{deploy_path}} && touch .htaccess");

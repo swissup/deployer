@@ -131,9 +131,9 @@ task('magento:deploy', [
     'deploy:shared',
     'deploy:writable',
     'deploy:cache:clear',
+    'deploy:unlock',
     'magento:release:success',
     'deploy:symlink',
-    'deploy:unlock',
-    'cleanup'
+    'cleanup',
 ]);
 fail('magento:deploy', 'magento:init:failed');

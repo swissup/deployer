@@ -11,7 +11,8 @@ task('magento:backup:create', function () {
         run("mkdir -p {{release_path}}/var/backups");
     }
     $timestamp = time();//date('YmdHis');
-    writeln(run("cd {{release_path}} && {{bin/magerun}} db:dump --quiet --strip=\"@stripped\" var/backups/{$timestamp}_db.sql"));
+    // writeln(run("cd {{release_path}} && {{bin/magerun}} db:dump --quiet --strip=\"@stripped\" var/backups/{$timestamp}_db.sql"));
+    writeln(run("cd {{release_path}} && {{bin/magerun}} db:dump --quiet var/backups/{$timestamp}_db.sql"));
     // writeln(run("cd {{release_path}} && echo {$timestamp} >> README.md"));
     // writeln(run('cd {{release_path}} && {{bin/git}} add .'));
     // writeln(run("cd {{release_path}} && {{bin/git}} commit -a -m \"Add code restore point: {$timestamp}\""));
@@ -50,12 +51,11 @@ option(
     'Set backup point.'
 );
 
-desc('Rollback to backup snapshot (require --backup=[BACKUP_SNAPSHOT])');
-task('magento:backup:rollback', function () {
+set('backup', function () {
 
     $backup = input()->getOption('backup');
     if (empty($backup)) {
-        writeln("<info>magento:backup:list - list backups</info>");
+        // writeln("<info>magento:backup:list - list backups</info>");
         $backup = false;
         $backups = get('magento_backup_list');
         foreach ($backups as $_backup) {
@@ -64,6 +64,14 @@ task('magento:backup:rollback', function () {
             }
         }
     }
+
+    return $backup;
+});
+
+desc('Rollback to backup snapshot (require --backup=[BACKUP_SNAPSHOT])');
+task('magento:backup:rollback', function () {
+
+    $backup = get('backup');
 
     if (empty($backup)) {
         writeln("<error>That task required option --backup=[BACKUP_SNAPSHOT]</error>");
@@ -79,7 +87,29 @@ task('magento:backup:rollback', function () {
 
     writeln($backup);
 
-    writeln(run("cd {{release_path}} && {{bin/magerun}} db:import --quiet var/backups/{$backup}_db.sql"));
+    writeln(run("{{bin/magerun}} db:import --root-dir={{deploy_path}}/current {{deploy_path}}/current/var/backups/{$backup}_db.sql"));
     // writeln(run("cd {{release_path}} && {{bin/git}} checkout backup.{$backup}"));
 });
 // before('magento:rollback', 'release:set');
+
+desc('Add backup cronjob');
+task('magento:backup:rollback:cronjob', function () {
+    $cronJobKey = hash('crc32', get('hostname')) . '_CRON_JOBS_FROM_DEPLOYMENT';
+
+    //delete all cronjobs with unique key
+    $resetCronJobsFromDeployment = sprintf('crontab -l | grep -v "%s" | crontab -', $cronJobKey);
+    writeln('Resetting crontab list using key: ' . $cronJobKey);
+    run($resetCronJobsFromDeployment);
+
+    //add cronjob with unique key
+    $backup = get('backup');
+    $cronjob = parse("{{bin/magerun}} db:import --quiet --root-dir={{deploy_path}}/current {{deploy_path}}/current/var/backups/{$backup}_db.sql");
+    $time = '0 */12 * * * ';
+    // $time = '*/10 * * * * ';
+    $cronjob = $time . $cronjob;
+    $cronjob = sprintf('%s #%s', $cronjob, $cronJobKey);
+    writeln('Adding cron');
+    writeln($cronjob);
+
+    run('(crontab -l ; echo "' . $cronjob . '") | crontab -');
+});

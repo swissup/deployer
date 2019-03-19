@@ -108,7 +108,8 @@ task('magento2:setup:di:compile', function () {
 })->setPrivate();
 
 task('magento2:setup:static-content:deploy', function () {
-    $locale = 'en_US';
+    // $locale = 'en_US';
+    $locale = get('language');
     run("cd {{release_path}} && {{bin/magento}} setup:static-content:deploy -f {$locale}", [
         'timeout' => 1200
     ]);

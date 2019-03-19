@@ -11,5 +11,9 @@ set('bin/magerun', function () {
             . "&& cp n98-magerun /usr/local/bin/n98-magerun"
         );
     }
+
+    if (commandExist('n98-magerun')) {
+        return locateBinaryPath('n98-magerun');
+    }
     return 'n98-magerun';
 });

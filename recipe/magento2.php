@@ -7,6 +7,7 @@ require_once CUSTOM_RECIPE_DIR . '/magento2/success.php';
 
 // see hosts.yml.example .magento2-settings
 // Configuration
+// set('repository', 'git@github.com:magento/magento2.git');
 // set('shared_files', [
 //     'app/etc/config.php',
 //     'app/etc/env.php',
@@ -25,8 +26,8 @@ require_once CUSTOM_RECIPE_DIR . '/magento2/success.php';
 // set('clear_paths', [
 //     'var/page_cache/*',
 //     'var/cache/*',
-//     //'var/composer_home/*',
 //     'var/generation/*',
+//     //'var/composer_home/*',
 //     // 'var/di/*',
 //     // 'var/view_preprocessed/*',
 //     // 'var/generation/*',

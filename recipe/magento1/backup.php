@@ -5,14 +5,16 @@ namespace Deployer;
 require_once CUSTOM_RECIPE_DIR . '/magento1.php';
 require_once CUSTOM_RECIPE_DIR . '/releases.php';
 
+set('backups_path', "{{release_path}}/var/backups");
+
 desc('Create backup snapshot');
 task('magento:backup:create', function () {
-    if (test("[ ! -d {{release_path}}/var/backups ]")) {
-        run("mkdir -p {{release_path}}/var/backups");
+    if (test("[ ! -d {{backups_path}} ]")) {
+        run("mkdir -p {{backups_path}}");
     }
     $timestamp = time();//date('YmdHis');
-    // writeln(run("cd {{release_path}} && {{bin/magerun}} db:dump --quiet --strip=\"@stripped\" var/backups/{$timestamp}_db.sql"));
-    writeln(run("cd {{release_path}} && {{bin/magerun}} db:dump --quiet var/backups/{$timestamp}_db.sql"));
+    // writeln(run("cd {{release_path}} && {{bin/magerun}} db:dump --quiet --strip=\"@stripped\" {{backups_path}}/{$timestamp}_db.sql"));
+    writeln(run("cd {{release_path}} && {{bin/magerun}} db:dump --quiet {{backups_path}}/{$timestamp}_db.sql"));
     // writeln(run("cd {{release_path}} && echo {$timestamp} >> README.md"));
     // writeln(run('cd {{release_path}} && {{bin/git}} add .'));
     // writeln(run("cd {{release_path}} && {{bin/git}} commit -a -m \"Add code restore point: {$timestamp}\""));
@@ -21,10 +23,10 @@ task('magento:backup:create', function () {
 // before('magento:backup:create', 'release:set');
 
 set('magento_backup_list', function () {
-    if (test("[ ! -d {{release_path}}/var/backups ]")) {
-        run("mkdir -p {{release_path}}/var/backups");
+    if (test("[ ! -d {{backups_path}} ]")) {
+        run("mkdir -p {{backups_path}}");
     }
-    $backups = run("cd {{release_path}} && ls var/backups/*_db.sql | awk '{print $1}'");
+    $backups = run("cd {{release_path}} && ls {{backups_path}}/*_db.sql | awk '{print $1}'");
     $backups = array_filter(explode("\n", $backups));
     $_backups = array();
     foreach ($backups as $path) {
@@ -87,7 +89,7 @@ task('magento:backup:rollback', function () {
 
     writeln($backup);
 
-    writeln(run("{{bin/magerun}} db:import --root-dir={{deploy_path}}/current {{deploy_path}}/current/var/backups/{$backup}_db.sql"));
+    writeln(run("{{bin/magerun}} db:import --root-dir={{deploy_path}}/current {{backups_path}}/{$backup}_db.sql"));
     // writeln(run("cd {{release_path}} && {{bin/git}} checkout backup.{$backup}"));
 });
 // before('magento:rollback', 'release:set');
@@ -98,12 +100,15 @@ task('magento:backup:rollback:cronjob', function () {
 
     //delete all cronjobs with unique key
     $resetCronJobsFromDeployment = sprintf('crontab -l | grep -v "%s" | crontab -', $cronJobKey);
-    writeln('Resetting crontab list using key: ' . $cronJobKey);
+    writeln('Resetting crontab list using key: ' . $cronJobKey . ' (' . get('hostname') . ')');
     run($resetCronJobsFromDeployment);
 
     //add cronjob with unique key
     $backup = get('backup');
-    $cronjob = parse("{{bin/magerun}} db:import --quiet --root-dir={{deploy_path}}/current {{deploy_path}}/current/var/backups/{$backup}_db.sql");
+    if (empty($backup)) {
+        return;
+    }
+    $cronjob = parse("{{bin/magerun}} db:import --quiet --root-dir={{deploy_path}}/current {{backups_path}}/{$backup}_db.sql");
     $time = '0 */12 * * * ';
     // $time = '*/10 * * * * ';
     $cronjob = $time . $cronjob;

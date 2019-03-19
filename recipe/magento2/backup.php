@@ -4,93 +4,125 @@ namespace Deployer;
 
 require_once CUSTOM_RECIPE_DIR . '/magento2.php';
 
+set('backups_path', "{{release_path}}/var/backups");
+
 desc('Backing up');
-task('magento2:backup', function () {
-    if (test("[ ! -d {{release_path}}/var/backups ]")) {
-        run("mkdir -p {{release_path}}/var/backups");
+task('magento2:backup:create', function () {
+    if (test("[ ! -d {{backups_path}} ]")) {
+        run("mkdir -p {{backups_path}}");
     }
     // writeln(run('cd {{release_path}} && {{bin/magerun2}} setup:backup --code'));
     // writeln(run('cd {{release_path}} && {{bin/magerun2}} setup:backup --db '));
     // writeln(run('cd {{release_path}} && {{bin/magerun2}} setup:backup --media'));
     $timestamp = time();//date('YmdHis');
-    writeln(run("cd {{release_path}} && {{bin/magerun2}} db:dump --quiet --strip=\"@stripped\" var/backups/{$timestamp}_db.sql"));
-    writeln(run("cd {{release_path}} && echo {$timestamp} >> README.md"));
-    writeln(run('cd {{release_path}} && {{bin/git}} add .'));
-    writeln(run("cd {{release_path}} && {{bin/git}} commit -a -m \"Add code restore point: {$timestamp}\""));
-    writeln(run("cd {{release_path}} && {{bin/git}} tag snapshot.{$timestamp}"));
+    // writeln(run("cd {{release_path}} && {{bin/magerun2}} db:dump --quiet --strip=\"@stripped\" {{backups_path}}/{$timestamp}_db.sql"));
+    writeln(run("cd {{release_path}} && {{bin/magerun2}} db:dump --quiet {{backups_path}}/{$timestamp}_db.sql"));
+    // writeln(run("cd {{release_path}} && echo {$timestamp} >> README.md"));
+    // writeln(run('cd {{release_path}} && {{bin/git}} add .'));
+    // writeln(run("cd {{release_path}} && {{bin/git}} commit -a -m \"Add code restore point: {$timestamp}\""));
+    // writeln(run("cd {{release_path}} && {{bin/git}} tag snapshot.{$timestamp}"));
 });
-before('magento2:backup', 'release:set');
 
-set('magento2_snapshot_list', function () {
-    if (test("[ ! -d {{release_path}}/var/backups ]")) {
-        run("mkdir -p {{release_path}}/var/backups");
+set('magento2_backup_list', function () {
+    if (test("[ ! -d {{backups_path}} ]")) {
+        run("mkdir -p {{backups_path}}");
     }
-    $snapshots = run("cd {{release_path}} && ls var/backups/*_db.sql | awk '{print $1}'");
-    $snapshots = array_filter(explode("\n", $snapshots));
+    $backups = run("cd {{release_path}} && ls {{backups_path}}/*_db.sql | awk '{print $1}'");
+    $backups = array_filter(explode("\n", $backups));
 
     $_backups = array();
-    foreach ($snapshots as $path) {
-        list($snapshot, ) = explode('_', basename($path));
-        $_backups[] = $snapshot;
+    foreach ($backups as $path) {
+        list($backup, ) = explode('_', basename($path));
+        $_backups[] = $backup;
     }
 
     return $_backups;
 });
 
 desc('List backups');
-task('magento2:snapshot:list', function () {
+task('magento2:backup:list', function () {
     // writeln(run('cd {{release_path}} && {{bin/magento}} info:backups:list'));
-    // writeln(run("cd {{release_path}} && ls var/backups/*_db.sql | awk '{print $1}'"));
-    $snapshots = get('magento2_snapshot_list');
-    if (count($snapshots) == 0) {
+    // writeln(run("cd {{release_path}} && ls {{backups_path}}/*_db.sql | awk '{print $1}'"));
+    $backups = get('magento2_backup_list');
+    if (count($backups) == 0) {
         writeln('<info>Nothing found</info>');
     } else {
-        foreach ($snapshots as $snapshot) {
-            writeln($snapshot . ' | ' . date('Y-m-d H:i:s', $snapshot));
+        foreach ($backups as $backup) {
+            writeln($backup . ' | ' . date('Y-m-d H:i:s', $backup));
         }
     }
 });
-before('magento2:snapshot:list', 'release:set');
 
 option(
-    'snapshot',
+    'backup',
     null,
     \Symfony\Component\Console\Input\InputOption::VALUE_OPTIONAL,
-    'Set snapshot point.'
+    'Set backup point.'
 );
 
-desc('Roll back');
-task('magento2:rollback', function () {
+set('backup', function () {
 
-    $snapshot = input()->getOption('snapshot');
-    if (empty($snapshot)) {
-        writeln("<info>magento2:snapshot:list - show all backup</info>");
-        $snapshot = false;
-        $snapshots = get('magento2_snapshot_list');
-        foreach ($snapshots as $_snapshot) {
-            if ($_snapshot > $snapshot) {
-                $snapshot = $_snapshot;
+    $backup = input()->getOption('backup');
+    if (empty($backup)) {
+        // writeln("<info>magento:backup:list - list backups</info>");
+        $backup = false;
+        $backups = get('magento2_backup_list');
+        foreach ($backups as $_backup) {
+            if ($_backup > $backup) {
+                $backup = $_backup;
             }
         }
     }
 
-    if (empty($snapshot)) {
-        writeln("<error>That task required option --snapshot=[SNAPSHOT]</error>");
-        return;
-    }
-    $snapshots = get('magento2_snapshot_list');
-
-    if (!in_array($snapshot, $snapshots)) {
-        writeln("<error>That task required valid option --snapshot=[SNAPSHOT]</error>");
-        writeln("<info>magento2:snapshot:list - show all backup</info>");
-        return;
-    }
-    writeln($snapshot);
-
-    // writeln(run('cd {{release_path}} && {{bin/magerun2}} setup:rollback --db-file=' . $snapshot . '_db.sql'));
-    // writeln(run('cd {{release_path}} && {{bin/magerun2}} setup:rollback --code-file=' . $snapshot . '_filesystem_code.tgz'));
-    // writeln(run('cd {{release_path}} && {{bin/magerun2}} setup:rollback --media-file=' . $snapshot . '_filesystem_media.tgz'));
-    writeln(run("cd {{release_path}} && {{bin/magerun2}} db:import --quiet var/backups/{$snapshot}_db.sql"));
-    writeln(run("cd {{release_path}} && {{bin/git}} checkout snapshot.{$snapshot}"));
+    return $backup;
 });
-before('magento2:rollback', 'release:set');
+
+desc('Roll back');
+task('magento2:backup:rollback', function () {
+
+    $backup = get('backup');
+
+    if (empty($backup)) {
+        writeln("<error>That task required option --backup=[SNAPSHOT]</error>");
+        return;
+    }
+    $backups = get('magento2_backup_list');
+
+    if (!in_array($backup, $backups)) {
+        writeln("<error>That task required valid option --backup=[SNAPSHOT]</error>");
+        writeln("<info>magento2:backup:list - list all backup</info>");
+        return;
+    }
+    writeln($backup);
+
+    // writeln(run('cd {{release_path}} && {{bin/magerun2}} setup:rollback --db-file=' . $backup . '_db.sql'));
+    // writeln(run('cd {{release_path}} && {{bin/magerun2}} setup:rollback --code-file=' . $backup . '_filesystem_code.tgz'));
+    // writeln(run('cd {{release_path}} && {{bin/magerun2}} setup:rollback --media-file=' . $backup . '_filesystem_media.tgz'));
+    writeln(run("{{bin/magerun2}} db:import --root-dir={{deploy_path}}/current --quiet {{backups_path}}/{$backup}_db.sql"));
+    // writeln(run("cd {{release_path}} && {{bin/git}} checkout snapshot.{$backup}"));
+});
+
+desc('Add backup cronjob');
+task('magento2:backup:rollback:cronjob', function () {
+    $cronJobKey = hash('crc32', get('hostname')) . '_CRON_JOBS_FROM_DEPLOYMENT';
+
+    //delete all cronjobs with unique key
+    $resetCronJobsFromDeployment = sprintf('crontab -l | grep -v "%s" | crontab -', $cronJobKey);
+    writeln('Resetting crontab list using key: ' . $cronJobKey . ' (' . get('hostname') . ')');
+    run($resetCronJobsFromDeployment);
+
+    //add cronjob with unique key
+    $backup = get('backup');
+    if (empty($backup)) {
+        return;
+    }
+    $cronjob = parse("{{bin/magerun2}} db:import --quiet --root-dir={{deploy_path}}/current {{backups_path}}/{$backup}_db.sql");
+    $time = '0 */12 * * * ';
+    // $time = '*/10 * * * * ';
+    $cronjob = $time . $cronjob;
+    $cronjob = sprintf('%s #%s', $cronjob, $cronJobKey);
+    writeln('Adding cron');
+    writeln($cronjob);
+
+    run('(crontab -l ; echo "' . $cronjob . '") | crontab -');
+});

@@ -17,11 +17,11 @@ task('magento2:deploy:apache:prepare', function () {
 
 ############################################
 ## rewrite everything else to */current
-    RewriteBase /{$rewriteBase}/
-
-    RewriteCond %{THE_REQUEST} /current/([^\s?]*) [NC]
-    RewriteRule ^ %1 [L,NE,R=302]
-    RewriteRule ^((?!current/).*)$ current [L,QSA]
+    RewriteRule ^$ current [L]
+    # RewriteBase /{$rewriteBase}/
+    # RewriteCond %{THE_REQUEST} /current/([^\s?]*) [NC]
+    # RewriteRule ^ %1 [L,NE,R=302]
+    # RewriteRule ^((?!current/).*)$ current [L,QSA]
     # RewriteRule ^((?!current/).*)$ current [L,NC]
 </IfModule>";
 

@@ -67,6 +67,7 @@ swissupdemo.com/test:
   <<: *mysql
   <<: *magento2-settings
   <<: *magento2-istall-settings
+  mysql_db: test
   deploy_path: /var/www/html/test
   stage: staging
   base_url: http://{{hostname}}/current

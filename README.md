@@ -10,16 +10,16 @@ Recipes for installing and deploying Magento with [deployer](http://deployer.org
 ### Pre-Install
 
 #### On local machine
-1. Install Deployer
+Install Deployer.
 
-  To install Deployer download [deployer.phar](http://deployer.org/deployer.phar) archive and move deployer.phar to your bin
-    directory and make it executable.
+To install Deployer download [deployer.phar](http://deployer.org/deployer.phar) archive and move deployer.phar to your bin directory and make it executable.
 
-    ```sh
-    ➜ $ curl -L http://deployer.org/deployer.phar -o deployer.phar
-    ➜ mv deployer.phar /usr/local/bin/dep
-    ➜ chmod +x /usr/local/bin/dep
-    ```
+```bash
+➜ $ curl -L http://deployer.org/deployer.phar -o deployer.phar
+➜ mv deployer.phar /usr/local/bin/dep
+➜ chmod +x /usr/local/bin/dep
+```
+
 ### Install
 
 Clone this repository

@@ -1,5 +1,5 @@
 # Magento Deployer Recipes
-Install magento recipe(s) for [deployer](http://deployer.org/)
+Recipes for installing and deploying Magento with [deployer](http://deployer.org/) tool.
 
 ### Usage Example:
 
@@ -11,7 +11,8 @@ Install magento recipe(s) for [deployer](http://deployer.org/)
 
 #### On local machine
 1. Install Deployer
-    To install Deployer download [deployer.phar](http://deployer.org/deployer.phar) archive and move deployer.phar to your bin
+
+  To install Deployer download [deployer.phar](http://deployer.org/deployer.phar) archive and move deployer.phar to your bin
     directory and make it executable.
 
     ```sh

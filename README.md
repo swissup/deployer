@@ -122,12 +122,12 @@ Now you will be able to serve your project.
 #### Back up & Rool back
 
 ~~~bash
-➜ dep magento2:backup
-➜ dep magento2:snapshot:list
+➜ dep magento2:backup:create
+➜ dep magento2:backup:list
 1531827423 | 2018-07-17 14:37:03
-➜ dep magento2:rollback --snapshot=1531827423
-➜ dep magento2:rollback --release=193900000000000000 --snapshot=1531827423
-➜ dep magento2:rollback --release=193900000000000000
+➜ dep magento2:backup:rollback
+➜ dep magento2:backup:rollback --backup=1531827423
+➜ dep magento2:backup:rollback --release=193900000000000000
 ~~~
 
 #### Create magento 1
@@ -142,15 +142,6 @@ Now you will be able to serve your project.
 
 ~~~bash
 ➜ dep releases:remove:all [hostname]
-~~~
-
-#### Create skeleton
-
-~~~bash
-
-➜ dep magento2:skeleton:create --packages=swissup/ajaxpro,swissup/ajaxlayerednavigation,swissup/firecheckout,swissup/askit,swissup/testimonials,swissup/sold-together,swissup/rich-snippets,swissup/reviewreminder,swissup/pro-labels,swissup/highlight,swissup/fblike,swissup/easytabs,swissup/easy-slide,swissup/easyflags,swissup/easycatalogimg,swissup/easybanner,swissup/attributepages,swissup/ajaxsearch,swissup/address-field-manager -v
-➜ dep magento2:skeleton:summon --modules=Swissup_Core,Swissup_Askit
-➜ dep magento2:skeleton:summon --packages=swissup/ajaxpro
 ~~~
 
 ### Remote server system requirements
@@ -190,10 +181,16 @@ Now you will be able to serve your project.
     ➜  make
     ➜  sudo make install
     ```
-5. Download and install n98-magerun (optional)
+5. Download and install n98-magerun and n98-magerun2 (optional)
 
     ```sh
     ➜  wget http://files.magerun.net/n98-magerun-latest.phar -O n98-magerun.phar
     ➜  mv n98-magerun.phar /usr/local/bin/n98-magerun
     ➜  chmod +x /usr/local/bin/n98-magerun
+    ```
+
+    ```sh
+    ➜  wget wget https://files.magerun.net/n98-magerun2.phar -O n98-magerun2.phar
+    ➜  mv n98-magerun2.phar /usr/local/bin/n98-magerun2
+    ➜  chmod +x /usr/local/bin/n98-magerun2
     ```

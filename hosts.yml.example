@@ -53,14 +53,16 @@
   timezone: America/Chicago
   use-rewrites: 1
 
-swissupdemo.com:
-  <<: *swissupdemo
-  <<: *mysql
-  <<: *magento2-settings
-  <<: *magento2-istall-settings
-  stage: production
-  deploy_path: /var/www/html
-  base_url: http://{{hostname}}/releases/{{release}}
+# swissupdemo.com:
+#  <<: *swissupdemo
+#  <<: *mysql
+#  <<: *magento2-settings
+#  <<: *magento2-istall-settings
+#  stage: production
+#  mysql_db: main
+#  deploy_path: /var/www/html
+##  base_url: http://{{hostname}}/releases/{{release}}
+#  base_url: https://{{hostname}}/
 
 swissupdemo.com/test:
   <<: *swissupdemo

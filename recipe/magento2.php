@@ -4,6 +4,7 @@ namespace Deployer;
 require_once CUSTOM_RECIPE_DIR . '/magento2/release.php';
 require_once CUSTOM_RECIPE_DIR . '/magento2/deploy.php';
 require_once CUSTOM_RECIPE_DIR . '/magento2/success.php';
+require_once CUSTOM_RECIPE_DIR . '/magento2/backup.php';
 
 // see hosts.yml.example .magento2-settings
 // Configuration
@@ -117,6 +118,7 @@ task('magento2:deploy', [
     'magento2:deploy:apache:prepare',
     'deploy:lock',
     'magento2:deploy:check',
+    'magento2:backup:create',
     'magento2:deploy:release',////////////////
     'magento2:deploy:update_code',
     'deploy:shared',// <--
@@ -143,4 +145,8 @@ task('magento2:deploy', [
     'cleanup',
     'magento2:success'
 ]);
-fail('magento2:deploy', 'magento2:init:failed');
+fail('magento2:deploy', [
+    'magento2:init:failed',
+    'magento2:deploy:create_db',
+    'magento2:backup:rollback'
+]);

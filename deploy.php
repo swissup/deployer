@@ -10,7 +10,6 @@ require_once CUSTOM_RECIPE_DIR . '/magento1/backup.php';
 require_once CUSTOM_RECIPE_DIR . '/magento1.php';
 // require_once CUSTOM_RECIPE_DIR . '/magento2/skeleton.php';
 require_once CUSTOM_RECIPE_DIR . '/magento2.php';
-require_once CUSTOM_RECIPE_DIR . '/magento2/backup.php';
 
 
 set('keep_releases', 5);

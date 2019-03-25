@@ -1,17 +1,6 @@
-.swissupdemo: &swissupdemo
-  host: swissupdemo.com
-  user: ec2-user
-  port: 22
-  identityFile: ~/.ssh/key.pem
-  # forwardAgent: true
-  # multiplexing: true
-  deploy_path: /var/www/html
-
-.mysql: &mysql
-  mysql_host: 127.0.0.1
-  mysql_user: user
-  mysql_pass: pass
-
+###################################################
+#  Magento intallation and configuration settings
+###################################################
 .magento2-settings: &magento2-settings
   repository: git@github.com:magento/magento2.git
   shared_dirs:
@@ -53,6 +42,28 @@
   timezone: America/Chicago
   use-rewrites: 1
 
+##################################
+#  Abstract host provider settings
+##################################
+
+.swissupdemo: &swissupdemo
+  host: swissupdemo.com
+  user: ec2-user
+  port: 22
+  identityFile: ~/.ssh/key.pem
+  # forwardAgent: true
+  # multiplexing: true
+  deploy_path: /var/www/html
+
+.mysql: &mysql
+  mysql_host: 127.0.0.1
+  mysql_user: user
+  mysql_pass: pass
+
+#########
+#  Hosts
+#########
+
 # swissupdemo.com:
 #  <<: *swissupdemo
 #  <<: *mysql
@@ -69,8 +80,8 @@ swissupdemo.com/test:
   <<: *mysql
   <<: *magento2-settings
   <<: *magento2-istall-settings
+  stage: staging
   mysql_db: test
   deploy_path: /var/www/html/test
-  stage: staging
   base_url: http://{{hostname}}/current
   add_sample_data: true

@@ -137,6 +137,11 @@ task('magento2:disable_static_sign', function () {
     run("cd {{release_path}} && {{bin/magento}} cache:clean config");
 })->setPrivate();
 
+task('magento2:security:unforce', function () {
+    run("cd {{release_path}} && {{bin/magento}} config:set admin/security/password_is_forced 0 --lock-config");
+    run("cd {{release_path}} && {{bin/magento}} cache:clean config");
+})->setPrivate();
+
 desc('Magento 2 after installation configuration (cache clean, set pass)');
 task('magento2:deploy:post:install', [
     'magento2:mode:developer',
@@ -145,5 +150,6 @@ task('magento2:deploy:post:install', [
     'magento2:indexer:reindex',
     'magento2:cache:flush',
     'magento2:cron:run',
-    'magento2:disable_static_sign'
+    'magento2:disable_static_sign',
+    'magento2:security:unforce'
 ])->setPrivate();

@@ -120,7 +120,7 @@ Now you will be able to serve your project.
 ➜ dep magento2:releases:list store.com
 ~~~
 
-#### Back up & Rool back
+#### Backup & Rollback
 
 ~~~bash
 ➜ dep magento2:backup:create

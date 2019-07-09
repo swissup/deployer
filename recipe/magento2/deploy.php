@@ -104,6 +104,9 @@ task('magento2:setup:di:compile', function () {
     run("cd {{release_path}} && {{bin/magento}} setup:di:compile", [
         'timeout' => 600
     ]);
+})->setPrivate();
+
+task('magento2:composer:dump-autoload', function () {
     run("cd {{release_path}} && {{bin/composer}} dump-autoload -o");
 })->setPrivate();
 
@@ -130,7 +133,8 @@ task('magento2:cache:flush', function () {
 
 task('magento2:cron:run', function () {
     run("cd {{release_path}} && {{bin/magento}} cron:run");
-})->setPrivate();
+})
+->setPrivate();
 
 task('magento2:disable_static_sign', function () {
     run("cd {{release_path}} && {{bin/magento}} config:set dev/static/sign 0 --lock-env");
@@ -146,10 +150,11 @@ desc('Magento 2 after installation configuration (cache clean, set pass)');
 task('magento2:deploy:post:install', [
     'magento2:mode:developer',
     'magento2:setup:di:compile',
+    // 'magento2:composer:dump-autoload',
     'magento2:setup:static-content:deploy',
     'magento2:indexer:reindex',
     'magento2:cache:flush',
-    'magento2:cron:run',
+    // 'magento2:cron:run',
     'magento2:disable_static_sign',
     'magento2:security:unforce'
 ])->setPrivate();

@@ -18,3 +18,8 @@ set('bin/magerun2', function () {
 
     return 'n98-magerun2';
 });
+
+desc('Updates n98-magerun2.phar to the latest version.');
+task('n98-magerun2:selfupdate', function () {
+    run("{{bin/sudo}} {{bin/magerun2}} self-update");
+})->setPrivate();

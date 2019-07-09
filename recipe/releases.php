@@ -183,3 +183,12 @@ set('admin_password', function () {
     return md5(get('deploy_path') . hash('sha256', get('hostname')));
     // return get('database_name');
 });
+
+task('releases:db:list', function () {
+    $dbs = get('get_all_databases');
+    foreach ($dbs as $db) {
+        if (0 === strpos($db, get('database_name_prefix'))) {
+            writeln($db);
+        }
+    }
+});

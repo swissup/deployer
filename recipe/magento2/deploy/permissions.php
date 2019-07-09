@@ -24,6 +24,7 @@ task('magento2:deploy:permissions', function () {
         "{{bin/sudo}} find . -type l -exec chmod 664 {} \; ",
         "{{bin/sudo}} chmod u+x bin/magento",
         "{{bin/sudo}} find var generated vendor pub/static pub/media app/etc -type f -exec chmod u+w {} +",
+                // "sudo find var generated vendor pub/static pub/media app/etc -type f -exec chmod g+w {} +"
         "{{bin/sudo}} find var generated vendor pub/static pub/media app/etc -type d -exec chmod u+w {} +",
         // "{{bin/sudo}} find var generated vendor pub/static pub/media app/etc -type l -exec chmod u+w {} +"
         //"{{bin/sudo}} chmod g+x {{bin/magento}} ",
@@ -32,8 +33,11 @@ task('magento2:deploy:permissions', function () {
         // "{{bin/sudo}} chmod -R g+w pub",
         // "{{bin/sudo}} chmod -R g+w var",
         // "{{bin/sudo}} chmod -R g+w generated"
+        // "{{bin/sudo}} find ./var -type d -exec chmod 777 {} \;"
     );
     foreach ($commands as $command) {
         run("cd {{release_path}} && " . $command);
     }
-})->setPrivate();
+    // run("{{bin/sudo}} chmod -R 0777 {{deploy_path}}/shared/");
+    // run("{{bin/sudo}} chmod -R 0777 {{release_path}}/var/");
+});//->setPrivate();

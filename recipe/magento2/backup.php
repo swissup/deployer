@@ -16,7 +16,7 @@ task('magento2:backup:create', function () {
     // writeln(run('cd {{release_path}} && {{bin/magerun2}} setup:backup --media'));
     $timestamp = time();//date('YmdHis');
     // writeln(run("cd {{release_path}} && {{bin/magerun2}} db:dump --quiet --strip=\"@stripped\" {{backups_path}}/{$timestamp}_db.sql"));
-    writeln(run("cd {{release_path}} && {{bin/magerun2}} db:dump --quiet {{backups_path}}/{$timestamp}_db.sql"));
+    writeln(run("cd {{current_path}} && {{bin/magerun2}} db:dump --quiet {{backups_path}}/{$timestamp}_db.sql"));
     // writeln(run("cd {{release_path}} && echo {$timestamp} >> README.md"));
     // writeln(run('cd {{release_path}} && {{bin/git}} add .'));
     // writeln(run("cd {{release_path}} && {{bin/git}} commit -a -m \"Add code restore point: {$timestamp}\""));

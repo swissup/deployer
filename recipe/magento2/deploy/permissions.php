@@ -38,6 +38,8 @@ task('magento2:deploy:permissions', function () {
     foreach ($commands as $command) {
         run("cd {{release_path}} && " . $command);
     }
+    // Allow create file(s) in symlink subdir
+    run("{{bin/sudo}} chmod -R  a+X {{deploy_path}}/shared");
     // run("{{bin/sudo}} chmod -R 0777 {{deploy_path}}/shared/");
     // run("{{bin/sudo}} chmod -R 0777 {{release_path}}/var/");
 });//->setPrivate();

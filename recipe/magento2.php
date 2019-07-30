@@ -61,6 +61,13 @@ set('copy_dirs', function () {
     return $vendors;
 });
 
+task('php-fpm:reload', function () {
+    if (test('[ "$(ps aux | grep php-fpm | grep -v grep | head -1)" ]')) {
+        run('{{bin/sudo}} service php-fpm reload');
+    }
+});
+after('deploy:symlink', 'php-fpm:reload');
+
 task('magento2:init:failed', function () {
     if (test("[ -h {{deploy_path}}/release ]")) {
         $releasePath = get('release_path');
@@ -145,6 +152,7 @@ task('magento2:deploy', [
     'cleanup',
     'magento2:success'
 ]);
+
 fail('magento2:deploy', [
     'magento2:init:failed',
     'magento2:deploy:create_db',

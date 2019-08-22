@@ -12,9 +12,11 @@ task('magento2:deploy:vendors:preinstall', function () {
         $username = runLocally('{{bin/composer}} global config http-basic.repo.magento.com.username');
         $password = runLocally('{{bin/composer}} global config http-basic.repo.magento.com.password');
     } catch (RuntimeException $e) {
-        writeln('Get and set your magento <a href="https://devdocs.magento.com/guides/v2.2/install-gde/prereq/connect-auth.html">Access Keys</a>');
-        writeln("{bin/composer}} config http-basic.repo.magento.com [Public Key] [Private Key]");
-        throw $e;
+        $message = 'Get and set your magento <a href="https://devdocs.magento.com/guides/v2.3/install-gde/prereq/connect-auth.html">Access Keys</a>';
+        $message .= "\n{bin/composer}} config -g http-basic.repo.magento.com [Public Key] [Private Key]";
+        $message .= "\n" . $e->getMessage();
+
+        throw new Exception($message);
     }
     run("cd {{release_path}} && {{bin/composer}} config http-basic.repo.magento.com $username $password");
     run("cd {{release_path}} && {{bin/composer}} config repositories.0 composer https://repo.magento.com");

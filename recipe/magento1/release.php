@@ -182,9 +182,14 @@ task('magento:release:packages:install', function () {
     $packages = [
         // 'symfony/console:2.4',
         // 'magento-hackathon/composer-command-integrator:*',
-        'magento-hackathon/magento-composer-installer:3.0.*',
-        'inchoo/php7:2.1.1'
+        'magento-hackathon/magento-composer-installer:3.0.*'
     ];
+
+    $releaseTag = (int) substr($release, 0, 4);
+    if ($releaseTag < 1940) {
+        $packages[] = 'inchoo/php7:2.1.1';
+    }
+
     foreach ($packages as $package) {
         run("cd {{release_path}} && {{bin/composer}} require -n --no-update --ignore-platform-reqs $package");
     }

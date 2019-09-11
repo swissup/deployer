@@ -20,6 +20,7 @@ set('owner', function () {
 });
 
 task('test', function () {
+    writeln(run('cd {{release_path}} && {{bin/magento}} --version'));
      // writeln(get('httpuser'));
      print_r(get('shared_dirs'));
      // print_r(get('option_packages'));

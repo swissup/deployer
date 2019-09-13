@@ -3,7 +3,7 @@
 namespace Deployer;
 
 set('composer_params', ' --verbose --optimize-autoloader --no-progress --no-interaction');
-set('php_cli_params', '-d memory_limit=-1');
+set('php_cli_params', '-d memory_limit=-1 -d allow_url_fopen=1');
 
 set('bin/composer', function () {
     if (commandExist('composer')) {

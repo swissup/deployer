@@ -2,6 +2,8 @@
 
 namespace Deployer;
 
+use Deployer\Exception\GracefulShutdownException;
+
 desc('Check Magento technology stack requirements');
 task('magento2:deploy:check', function () {
     // date_default_timezone_set('America/New_York');
@@ -119,3 +121,15 @@ task('magento2:deploy:check', function () {
     }
 });
 //->setPrivate();
+
+task('magento2:installed:check', function () {
+
+    $exist = test("[ -f {{release_path}}/bin/magento ]");
+    if (!$exist) {
+        throw new GracefulShutdownException(
+            "The script requires already installed \"Magento 2\"."
+        );
+    }
+})
+// ->setPrivate()
+;

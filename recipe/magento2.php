@@ -124,6 +124,7 @@ task('magento2:deploy', [
     'deploy:prepare',
     'magento2:deploy:apache:prepare',
     'deploy:lock',
+    'magento2:installed:check',
     'magento2:deploy:check',
     'magento2:backup:create',
     'magento2:deploy:release',////////////////

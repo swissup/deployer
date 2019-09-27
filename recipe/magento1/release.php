@@ -170,7 +170,7 @@ task('magento:release:packages:install', function () {
         . " && {{bin/jq}} '.extra." . 'magentorootdir = "{{release_path}}"'
         . "' composer.json.old  " . "| sed -r 's/magentorootdir/magento-root-dir/g'" . "> composer.json"
         . " && mv -f composer.json composer.json.old"
-        . " && {{bin/jq}} '.extra." . 'magentodeploystrategy = "symlink"'. "' composer.json.old "
+        . " && {{bin/jq}} '.extra." . 'magentodeploystrategy = "copy"'. "' composer.json.old "
         . "| sed -r 's/magentodeploystrategy/magento-deploystrategy/g'" . " > composer.json"
         . " && mv -f composer.json composer.json.old"
         . " && {{bin/jq}} '.extra." . 'magentoforce'. " = true' composer.json.old "

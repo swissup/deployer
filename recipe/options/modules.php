@@ -225,11 +225,15 @@ set('option_modules', function () {
                         if (!in_array($vendor, array('tm', 'swissup'))) {
                             continue;
                         }
+                        if ($vendor === 'swissup' && strpos($module, 'theme-') === 0) {
+                            continue;
+                        }
                         if ('tm' == $vendor) {
                             $vendor = 'TM';
                         } else {
                             $vendor = 'Swissup';
                         }
+
                         $module = str_replace('module-', '', $module);
                         $module = str_replace(' ', '', ucwords(str_replace('_', ' ', $module)));
                         $module = str_replace(' ', '', ucwords(str_replace('-', ' ', $module)));

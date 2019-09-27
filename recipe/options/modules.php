@@ -225,7 +225,7 @@ set('option_modules', function () {
                         if (!in_array($vendor, array('tm', 'swissup'))) {
                             continue;
                         }
-                        if ($vendor === 'swissup' && strpos($module, 'theme-') === 0) {
+                        if ($vendor === 'swissup' && strpos($module, 'module-') !== 0) {
                             continue;
                         }
                         if ('tm' == $vendor) {

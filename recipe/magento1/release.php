@@ -129,6 +129,20 @@ task('magento:release:setup:install', function () {
     $releasePath = get('release_path');
     $release = basename($releasePath);
 
+    /* dirty fix for 1.9.4.3*/
+    if (!test('[ -f ~/.n98-magerun.yaml ]')) {
+        // $password = get('admin_password');
+        $configDefaults = "commands:
+  N98\Magento\Command\Installer\InstallCommand:
+    installation:
+      defaults:
+        currency: USD
+        admin_password: mydefaultSecretmydefaultSecret";
+
+        run("touch ~/.n98-magerun.yaml");
+        run("echo \"{$configDefaults}\" > ~/.n98-magerun.yaml");
+    }
+
     $_options = [
         'noDownload'             => '',
         'forceUseDb'             => '',

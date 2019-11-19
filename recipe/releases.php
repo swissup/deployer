@@ -176,6 +176,9 @@ task('releases:remove', function () {
 before('releases:remove', 'release:set');
 
 set('database_name', function () {
+    if (get('mysql_db') === false) {
+        throw new RuntimeException("mysql_db is strong required option.\n");
+    }
     return get('database_name_prefix') . (get('mysql_db') ? get('mysql_db') : get('release'));
 });
 

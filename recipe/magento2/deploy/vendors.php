@@ -31,6 +31,10 @@ task('magento2:deploy:vendors:preinstall', function () {
 ////////////////////////////////////////////////////////////////////////////////
 desc('Run composer install command in current mage 2 instance');
 task('magento2:deploy:vendors:install', function () {
+    // fix for https://github.com/magento/magento2/issues/24937
+    // run("cd {{release_path}} && {{bin/composer}} require -n --no-update --ignore-platform-reqs symfony/service-contracts:v1.1.6 ");
+    // run("cd {{release_path}} && {{bin/composer}} update symfony/service-contracts --ignore-platform-reqs");
+
     run("cd {{release_path}} && {{bin/composer}} install {{composer_params}}");
 })->setPrivate();
 

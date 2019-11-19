@@ -42,4 +42,4 @@ task('magento2:deploy:permissions', function () {
     run("{{bin/sudo}} chmod -R  a+X {{deploy_path}}/shared");
     // run("{{bin/sudo}} chmod -R 0777 {{deploy_path}}/shared/");
     // run("{{bin/sudo}} chmod -R 0777 {{release_path}}/var/");
-});//->setPrivate();
+})->setPrivate();

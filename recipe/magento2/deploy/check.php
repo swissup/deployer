@@ -119,8 +119,7 @@ task('magento2:deploy:check', function () {
     foreach ($phpModules as $phpModule) {
         check("{{bin/php}} -m | grep {$phpModule}", [$phpModule]);
     }
-});
-//->setPrivate();
+})->setPrivate();
 
 task('magento2:installed:check', function () {
 
@@ -130,6 +129,4 @@ task('magento2:installed:check', function () {
             "The script requires already installed \"Magento 2\"."
         );
     }
-})
-// ->setPrivate()
-;
+})->setPrivate();

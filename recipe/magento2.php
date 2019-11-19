@@ -126,6 +126,8 @@ task('magento2:deploy', [
     'deploy:lock',
     'magento2:installed:check',
     'magento2:deploy:check',
+    'magento2:rm-outdated',
+    'magento2:cache:clean',
     'magento2:backup:create',
     'magento2:deploy:release',////////////////
     'magento2:deploy:update_code',

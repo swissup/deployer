@@ -12,7 +12,7 @@ require_once CUSTOM_RECIPE_DIR . '/magento1.php';
 require_once CUSTOM_RECIPE_DIR . '/magento2.php';
 
 
-set('keep_releases', 5);
+set('keep_releases', 2);
 set('default_stage', 'production');
 set('use_relative_symlink', false);
 set('use_atomic_symlink', false);

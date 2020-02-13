@@ -11,10 +11,13 @@ task('magento2:deploy:update_code', function () {
     $gitCache = get('git_cache');
     $depth = $gitCache ? '' : '--depth 1';
     $branch = get('branch');
-    if (input()->hasOption('branch')) {
+    if (input()->hasOption('branch') && !empty(input()->getOption('branch'))
+    ) {
         $branch = input()->getOption('branch');
     }
-    if (input()->hasOption('tag')) {
+    $tag = get('tag');
+    if (input()->hasOption('tag') && !empty(input()->getOption('tag'))
+    ) {
         $tag = input()->getOption('tag');
     }
     $releases = get('magento2_releases_list');

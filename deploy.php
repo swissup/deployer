@@ -11,7 +11,6 @@ require_once CUSTOM_RECIPE_DIR . '/magento1.php';
 // require_once CUSTOM_RECIPE_DIR . '/magento2/skeleton.php';
 require_once CUSTOM_RECIPE_DIR . '/magento2.php';
 
-
 set('keep_releases', 2);
 set('default_stage', 'production');
 set('use_relative_symlink', false);
@@ -27,5 +26,6 @@ set('add_sample_data', false);
 set('mysql_host', '127.0.0.1');
 set('mysql_db', false);
 set('packages', false);
+set('tag', false);
 
 inventory('hosts.yml');

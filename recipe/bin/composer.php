@@ -28,4 +28,9 @@ task('composer:current:clear', function () {
 desc('The self-update command checks getcomposer.org for newer versions of composer and if found, installs the latest.');
 task('composer:selfupdate', function () {
     run("{{bin/sudo}} {{bin/composer}} self-update");
-})->setPrivate();
+});//->setPrivate();
+
+desc('Install hirak/prestissimo composer plugin.');
+task('composer:prestissimo:install', function () {
+    run("{{bin/sudo}} {{bin/composer}} global require hirak/prestissimo");
+});//->setPrivate();

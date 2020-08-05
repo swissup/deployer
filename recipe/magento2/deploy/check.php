@@ -41,7 +41,6 @@ task('magento2:deploy:check', function () {
                 $status = true;
                 $result = str_replace($fingerprint, "<fg=cyan>" . $fingerprint . "</fg=cyan>", $result);
             }
-
         }
         $status = $status ? $checked : $notchecked;
         writeln("\t" . $result . $status);
@@ -96,6 +95,9 @@ task('magento2:deploy:check', function () {
             return ((version_compare($phpVersion, '7.1.3', '>=') && version_compare($phpVersion, '7.2.0', '<'))
                 || version_compare($phpVersion, '7.2.0', '>=')
             );
+        },
+        '2.4' => function ($phpVersion) {
+            return (version_compare($phpVersion, '7.3.0', '>='));
         }
     ];
     if (input()->hasOption('tag')) {
@@ -114,10 +116,13 @@ task('magento2:deploy:check', function () {
 
     ////////////////////////////////////////////////////////////////////////////
     writeln("Required PHP extensions:");
-    $phpModules = 'bcmath,ctype,curl,dom,gd,intl,mbstring,mcrypt,hash,openssl,PDO ,SimpleXML,soap,libxml,xsl,zip,json,iconv,SPL' ;
+    $phpModules = 'bcmath,ctype,curl,dom,gd,intl,mbstring,mcrypt,hash,openssl,pdo ,simplexml,soap,libxml,xsl,zip,json,iconv,spl' ;
+    if ($tag === '2.4') {
+        $phpModules = 'bcmath,ctype,curl,dom,gd,intl,mbstring,hash,iconv,openssl,pdo_mysql,simplexml,soap,xsl,zip,libxml' ;
+    }
     $phpModules = explode(',', $phpModules);
     foreach ($phpModules as $phpModule) {
-        check("{{bin/php}} -m | grep {$phpModule}", [$phpModule]);
+        check("{{bin/php}} -m | awk '{print tolower($0)}' | grep {$phpModule}", [$phpModule]);
     }
 })->setPrivate();
 

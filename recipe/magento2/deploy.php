@@ -111,7 +111,7 @@ task('magento2:composer:dump-autoload', function () {
 })->setPrivate();
 
 task('magento2:rm-outdated', function () {
-    run("cd {{release_path}} && rm -rf pub/static/_requirejs var/view_preprocessed pub/static/frontend/ pub/static/adminhtml/ generated/code/");
+    run("cd {{release_path}} && rm -rf pub/static/_requirejs var/view_preprocessed pub/static/frontend/ pub/static/adminhtml/ generated/code/ generated/metadata/");
 })->setPrivate();
 
 task('magento2:setup:static-content:deploy', function () {

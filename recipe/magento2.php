@@ -140,7 +140,7 @@ task('magento2:deploy', [
     'magento2:setup:upgrade',
     'magento2:deploy:sampledata:install',
     'magento2:deploy:vendors:update',
-    'magento2:deploy:modules:enable',
+    // 'magento2:deploy:modules:enable',
     'magento2:setup:upgrade',
     'magento2:deploy:post:install', // <--
     'magento2:deploy:usermod',

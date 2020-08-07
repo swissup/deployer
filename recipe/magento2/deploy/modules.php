@@ -6,7 +6,7 @@ require_once CUSTOM_RECIPE_DIR . '/bin/magento.php';
 
 task('magento2:deploy:modules:enable', function () {
     $modules = get('option_modules');
-    // print_r($packages);
+    // print_r($modules);
     if (empty($modules)) {
         $modules = '--all';
     } else {
@@ -26,6 +26,6 @@ task('magento2:deploy:modules:enable', function () {
     run(
         "cd {{release_path}} "
         . "&& {{bin/magento}} module:enable $options $modules"
-        . "&& {{bin/magento}} setup:upgrade"
+        // . "&& {{bin/magento}} setup:upgrade"
     );
 })->setPrivate();

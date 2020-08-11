@@ -131,6 +131,26 @@ task('magento2:cache:clean', function () {
     run("cd {{release_path}} && {{bin/magento}} cache:clean");
 })->setPrivate();
 
+// desc('Add clean cache cronjob');
+// task('magento2:cache:clean:cronjob', function () {
+//     $cronJobKey = hash('crc32', get('hostname')) . '_CRON_JOBS_CACHE_CLEAN';
+
+//     //delete all cronjobs with unique key
+//     $resetCronJobsFromDeployment = sprintf('crontab -l | grep -v "%s" | crontab -', $cronJobKey);
+//     writeln('Resetting crontab list using key: ' . $cronJobKey . ' (' . get('hostname') . ')');
+//     run($resetCronJobsFromDeployment);
+
+//     $cronjob = parse("{{bin/magerun2}} cache:clean --quiet --root-dir={{deploy_path}}/current");
+//     $time = '0 */12 * * * ';
+//     // $time = '*/10 * * * * ';
+//     $cronjob = $time . $cronjob;
+//     $cronjob = sprintf('%s #%s', $cronjob, $cronJobKey);
+//     writeln('Adding cron');
+//     writeln($cronjob);
+
+//     run('(crontab -l ; echo "' . $cronjob . '") | crontab -');
+// });
+
 task('magento2:cache:flush', function () {
     run("cd {{release_path}} && {{bin/magento}} cache:flush");
 })->setPrivate();

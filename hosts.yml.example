@@ -29,6 +29,9 @@
   clear_paths:
     - generated/*
     - pub/static/_cache/*
+    - pub/static/_requirejs/*
+    - pub/static/adminhtml/*
+    - pub/static/frontend/*
     - var/generation/*
     - var/cache/*
     - var/page_cache/*

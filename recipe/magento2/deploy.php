@@ -111,7 +111,7 @@ task('magento2:composer:dump-autoload', function () {
 })->setPrivate();
 
 task('magento2:rm-outdated', function () {
-    run("cd {{release_path}} && rm -rf pub/static/_requirejs var/view_preprocessed pub/static/frontend/ pub/static/adminhtml/ generated/code/");
+    run("cd {{release_path}} && {{bin/sudo}} rm -rf pub/static/_requirejs var/view_preprocessed pub/static/frontend/ pub/static/adminhtml/ generated/code/");
 })->setPrivate();
 
 task('magento2:setup:static-content:deploy', function () {
@@ -153,7 +153,8 @@ task('magento2:security:unforce', function () {
 desc('Magento 2 after installation configuration (cache clean, set pass)');
 task('magento2:deploy:post:install', [
     'magento2:mode:developer',
-    'magento2:rm-outdated',
+    // 'magento2:rm-outdated',
+    'deploy:clear_paths',
     'magento2:setup:static-content:deploy',
     'magento2:setup:di:compile',
     // 'magento2:composer:dump-autoload',

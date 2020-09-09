@@ -126,7 +126,8 @@ task('magento2:deploy', [
     'deploy:lock',
     'magento2:installed:check',
     'magento2:deploy:check',
-    'magento2:rm-outdated',
+    // 'magento2:rm-outdated',
+    'deploy:clear_paths',
     'magento2:cache:clean',
     'magento2:backup:create',
     'magento2:deploy:release',////////////////
@@ -140,7 +141,7 @@ task('magento2:deploy', [
     'magento2:setup:upgrade',
     'magento2:deploy:sampledata:install',
     'magento2:deploy:vendors:update',
-    'magento2:deploy:modules:enable',
+    // 'magento2:deploy:modules:enable',
     'magento2:setup:upgrade',
     'magento2:deploy:post:install', // <--
     'magento2:deploy:usermod',

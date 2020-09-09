@@ -116,9 +116,9 @@ task('magento2:deploy:check', function () {
 
     ////////////////////////////////////////////////////////////////////////////
     writeln("Required PHP extensions:");
-    $phpModules = 'bcmath,ctype,curl,dom,gd,intl,mbstring,hash,openssl,pdo ,simplexml,soap,libxml,xsl,zip,json,iconv,spl';
-    if (version_compare($phpVersion, '7.2.0', '<')) {
-        $phpModules .= 'mcrypt';
+    $phpModules = 'bcmath,ctype,curl,dom,gd,intl,mbstring,hash,openssl,pdo ,simplexml,soap,libxml,xsl,zip,json,iconv,spl' ;
+    if (version_compare($phpVersion, '7.2.0', '=<')) {
+        $phpModules .= ',mcrypt';
     }
 
     if ($tag === '2.4') {

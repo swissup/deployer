@@ -4,8 +4,18 @@
 .magento2-settings: &magento2-settings
   repository: git@github.com:magento/magento2.git
   shared_dirs:
+    - var/composer_home
     - var/log
+    - var/cache
     - var/backups
+    - var/export
+    - var/report
+    - var/import_history
+    - var/session
+    - var/importexport
+    - var/backups
+    - var/tmp
+    - pub/sitemaps
     - pub/media
   shared_files:
     - app/etc/config.php
@@ -15,10 +25,17 @@
     - var
     - pub/static
     - pub/media
+    - generated
   clear_paths:
-    - var/page_cache/*
-    - var/cache/*
+    - generated/*
+    - pub/static/_cache/*
+    - pub/static/_requirejs/*
+    - pub/static/adminhtml/*
+    - pub/static/frontend/*
     - var/generation/*
+    - var/cache/*
+    - var/page_cache/*
+    - var/view_preprocessed/*
 
 .magento1-settings: &magento1-settings
   repository: git@github.com:OpenMage/magento-mirror.git

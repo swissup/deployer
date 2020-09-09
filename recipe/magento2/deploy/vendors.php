@@ -9,6 +9,8 @@ task('magento2:deploy:vendors:preinstall', function () {
     // $username = get('magento_composer_username');
     // $password = get('magento_composer_password');
     try {
+        //>whereis composer
+        //>sudo ln -s /usr/bin/composer /usr/local/bin/composer
         $username = runLocally('{{bin/composer}} global config http-basic.repo.magento.com.username');
         $password = runLocally('{{bin/composer}} global config http-basic.repo.magento.com.password');
     } catch (RuntimeException $e) {

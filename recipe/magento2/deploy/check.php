@@ -132,7 +132,7 @@ task('magento2:deploy:check', function () {
 
 task('magento2:installed:check', function () {
 
-    $exist = test("[ -f {{release_path}}/bin/magento ]");
+    $exist = test("[ -f {{current_path}}/bin/magento ]");
     if (!$exist) {
         throw new GracefulShutdownException(
             "The script requires already installed \"Magento 2\"."

@@ -37,7 +37,7 @@ task('magento2:deploy:vendors:install', function () {
     // run("cd {{release_path}} && {{bin/composer}} require -n --no-update --ignore-platform-reqs symfony/service-contracts:v1.1.6 ");
     // run("cd {{release_path}} && {{bin/composer}} update symfony/service-contracts --ignore-platform-reqs");
 
-    run("cd {{release_path}} && {{bin/composer}} install {{composer_params}}");
+    run("cd {{release_path}} && {{bin/composer}} install {{composer_params}} --ignore-platform-reqs");
 })->setPrivate();
 
 ////////////////////////////////////////////////////////////////////////////////

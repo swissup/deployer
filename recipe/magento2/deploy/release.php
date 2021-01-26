@@ -7,6 +7,7 @@ task('magento2:deploy:release', function () {
     if (input()->hasOption('release') && !empty(input()->getOption('release'))) {
         $release = input()->getOption('release');
     } else {
+        $tag = get('tag');
         if (input()->hasOption('tag')) {
             $tag = input()->getOption('tag');
             if (!empty($tag)) {

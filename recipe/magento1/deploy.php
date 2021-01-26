@@ -9,6 +9,7 @@ task('magento:deploy:release', function () {
     if (input()->hasOption('release') && !empty(input()->getOption('release'))) {
         $release = input()->getOption('release');
     } else {
+        $tag = get('tag');
         if (input()->hasOption('tag') && !empty(input()->getOption('tag'))) {
             $tag = input()->getOption('tag');
         }
@@ -67,6 +68,7 @@ task('magento:deploy:update_code', function () {
     if (input()->hasOption('branch')) {
         $branch = input()->getOption('branch');
     }
+    $tag = get('tag');
     if (input()->hasOption('tag')) {
         $tag = input()->getOption('tag');
     }

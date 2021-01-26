@@ -100,6 +100,7 @@ task('magento2:deploy:check', function () {
             return (version_compare($phpVersion, '7.3.0', '>='));
         }
     ];
+    $tag = get('tag');
     if (input()->hasOption('tag')) {
         $tag = input()->getOption('tag');
     }

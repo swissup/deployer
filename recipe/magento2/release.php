@@ -58,3 +58,19 @@ task('magento2:repository:last:tag', function () {
     $tag = get('magento2_repository_last_tag');
     writeln("$tag");
 })->setPrivate();
+
+
+set('magento2_current_tag', function () {
+
+    $tag = get('tag');
+    if (input()->hasOption('tag')
+        && !empty(input()->getOption('tag'))
+    ) {
+        $tag = input()->getOption('tag');
+    }
+    if (empty($tag)) {
+        $tag = get('magento2_repository_last_tag');
+    }
+
+    return  $tag;
+});

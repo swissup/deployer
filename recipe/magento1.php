@@ -42,7 +42,8 @@ require_once CUSTOM_RECIPE_DIR . '/magento1/release.php';
 // );
 // set('argento_theme', function () {
 //     $theme = 'Pure2';
-//     if (input()->hasOption('argento-theme')) {
+//     if (input()->hasOption('argento-theme')
+//     && !empty(input()->getOption('argento-theme'))) {
 //         $theme = input()->getOption('argento-theme');
 //     }
 //     if (empty($theme)) {

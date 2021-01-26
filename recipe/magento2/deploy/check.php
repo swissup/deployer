@@ -101,7 +101,9 @@ task('magento2:deploy:check', function () {
         }
     ];
     $tag = get('tag');
-    if (input()->hasOption('tag')) {
+    if (input()->hasOption('tag')
+        && !empty(input()->getOption('tag'))
+    ) {
         $tag = input()->getOption('tag');
     }
     if (empty($tag)) {

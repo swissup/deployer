@@ -65,11 +65,15 @@ task('magento:deploy:update_code', function () {
     $gitCache = get('git_cache');
     $depth = $gitCache ? '' : '--depth 1';
 
-    if (input()->hasOption('branch')) {
+    if (input()->hasOption('branch')
+        && !empty(input()->getOption('branch'))
+    ) {
         $branch = input()->getOption('branch');
     }
     $tag = get('tag');
-    if (input()->hasOption('tag')) {
+    if (input()->hasOption('tag')
+        && !empty(input()->getOption('tag'))
+    ) {
         $tag = input()->getOption('tag');
     }
     $at = '';

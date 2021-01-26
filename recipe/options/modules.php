@@ -13,7 +13,9 @@ option(
 
 set('option_modules', function () {
     $modules = [];
-    if (input()->hasOption('modules')) {
+    if (input()->hasOption('modules')
+        && !empty(input()->getOption('modules'))
+    ) {
         $modules = input()->getOption('modules');
 
         if (empty($modules)) {

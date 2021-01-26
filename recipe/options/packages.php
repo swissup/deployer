@@ -11,7 +11,9 @@ option(
 
 set('option_packages', function () {
     $packages = [];
-    if (input()->hasOption('packages')) {
+    if (input()->hasOption('packages')
+        // && !empty(input()->getOption('packages'))
+    ) {
         $rawpackages = input()->getOption('packages');
 
         if (empty($rawpackages)) {

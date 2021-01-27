@@ -68,9 +68,24 @@ task('magento2:deploy:check', function () {
         'nginx/1.15.',
     ]);
 
+    $tag = get('tag');
+    if (input()->hasOption('tag')
+        && !empty(input()->getOption('tag'))
+    ) {
+        $tag = input()->getOption('tag');
+    }
+    if (empty($tag)) {
+        $tag = get('magento2_repository_last_tag');
+    }
+    $magentoVersion = substr_replace($tag, '', -2);
+
     ////////////////////////////////////////////////////////////////////////////
     write("Database:");
-    check("{{bin/mysql}} --version", ['5.6.', '5.7.']);
+    if ($magentoVersion === '2.4') {
+        check("{{bin/mysql}} --version", ['8.0', '10.4', '5.7.']);
+    } else {
+        check("{{bin/mysql}} --version", ['5.6.', '5.7.']);
+    }
 
     ////////////////////////////////////////////////////////////////////////////
     write("PHP: ");
@@ -100,18 +115,9 @@ task('magento2:deploy:check', function () {
             return (version_compare($phpVersion, '7.3.0', '>='));
         }
     ];
-    $tag = get('tag');
-    if (input()->hasOption('tag')
-        && !empty(input()->getOption('tag'))
-    ) {
-        $tag = input()->getOption('tag');
-    }
-    if (empty($tag)) {
-        $tag = get('magento2_repository_last_tag');
-    }
-    $tag = substr_replace($tag, '', -2);
+
     $phpVersion = run("{{bin/php}} -v | head -1 | cut -d\  -f2");
-    if (isset($req[$tag]) && $req[$tag]($phpVersion)) {
+    if (isset($req[$magentoVersion]) && $req[$magentoVersion]($phpVersion)) {
         writeln($phpVersion . $checked);
     } else {
         writeln("\t" . run("{{bin/php}} -v | head -1") . $notchecked);
@@ -124,7 +130,7 @@ task('magento2:deploy:check', function () {
         $phpModules .= ',mcrypt';
     }
 
-    if ($tag === '2.4') {
+    if ($magentoVersion === '2.4') {
         $phpModules = 'bcmath,ctype,curl,dom,gd,intl,mbstring,hash,iconv,openssl,pdo_mysql,simplexml,soap,xsl,zip,libxml' ;
     }
     $phpModules = explode(',', $phpModules);

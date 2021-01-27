@@ -50,12 +50,22 @@ task('magento2:setup:install', function () {
         // 'use-sample-data'   => ''
     ];
 
+    $tag = get('magento2_current_tag');
+    $magentoVersion = substr_replace($tag, '', -2);
+    if ($magentoVersion === '2.4') {
+        $_options['disable-modules'] = implode(',', [
+            // 'Magento_InventoryElasticsearch',
+            'Magento_Elasticsearch7',
+            'Magento_Elasticsearch6',
+            'Magento_Elasticsearch'
+        ]);
+    }
+
     $options = "";
     foreach ($_options as $key => $value) {
         $options .= ' --' . ('' === $value ? "$key" :"$key=\"$value\"");
     }
 
-    // writeln("{{bin/magento}} setup:install $options");
     run("cd {{release_path}} && {{bin/magento}} setup:install $options", [
         'timeout' => 600
     ]);

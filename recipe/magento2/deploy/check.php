@@ -97,7 +97,7 @@ task('magento2:deploy:check', function () {
         $elasticUsername = get('elastic_user');
         $elasticPassword = get('elastic_pass');
         $elasticPort = get('elastic_port');
-        check("curl -XGET -u {$elasticUsername}:{$elasticPassword} '{$elasticHostname}:{$elasticPort}/?pretty'", ['elasticsearch']);
+        check("curl -XGET -u {$elasticUsername}:{$elasticPassword} '{$elasticHostname}:{$elasticPort}/?pretty' | grep cluster_name ", ['elasticsearch']);
     }
 
     ////////////////////////////////////////////////////////////////////////////

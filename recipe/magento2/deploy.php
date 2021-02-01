@@ -53,12 +53,30 @@ task('magento2:setup:install', function () {
     $tag = get('magento2_current_tag');
     $magentoVersion = substr_replace($tag, '', -2);
     if ($magentoVersion === '2.4') {
-        $_options['disable-modules'] = implode(',', [
-            // 'Magento_InventoryElasticsearch',
-            'Magento_Elasticsearch7',
-            'Magento_Elasticsearch6',
-            'Magento_Elasticsearch'
-        ]);
+
+        $elasticHost = $elasticUser = $elasticPass = $elasticPort = false;
+
+        if(has('elasticsearch_host')) {
+            $elasticHost = get('elasticsearch_host');
+            $elasticUser = get('elasticsearch_user');
+            $elasticPass = get('elasticsearch_pass');
+            $elasticPort = get('elasticsearch_port');
+        }
+
+        if ($elasticHost && $elasticUser && $elasticPass && $elasticPort) {
+            $_options['elasticsearch-host'] = $elasticHost;
+            $_options['elasticsearch-port'] = $elasticPort;
+            $_options['elasticsearch-enable-auth'] = 1;
+            $_options['elasticsearch-username'] = $elasticUser;
+            $_options['elasticsearch-password'] = $elasticPass;
+        } else {
+            $_options['disable-modules'] = implode(',', [
+                // 'Magento_InventoryElasticsearch',
+                'Magento_Elasticsearch7',
+                'Magento_Elasticsearch6',
+                'Magento_Elasticsearch'
+            ]);
+        }
     }
 
     $options = "";

@@ -39,7 +39,11 @@ task('magento2:deploy:check', function () {
             $fingerprint = strtolower($fingerprint);
             if (strstr($_result, $fingerprint)) {
                 $status = true;
-                $result = str_replace($fingerprint, "<fg=cyan>" . $fingerprint . "</fg=cyan>", $result);
+                $result = str_replace(
+                    $fingerprint,
+                    "<fg=cyan>" . $fingerprint . "</fg=cyan>",
+                    $result
+                );
             }
         }
         $status = $status ? $checked : $notchecked;
@@ -85,6 +89,15 @@ task('magento2:deploy:check', function () {
         check("{{bin/mysql}} --version", ['8.0', '10.4', '5.7.']);
     } else {
         check("{{bin/mysql}} --version", ['5.6.', '5.7.']);
+    }
+    ////////////////////////////////////////////////////////////////////////////
+    if ($magentoVersion === '2.4') {
+        write("Elasticsearch:");
+        $elasticHostname = get('elastic_host');
+        $elasticUsername = get('elastic_user');
+        $elasticPassword = get('elastic_pass');
+        $elasticPort = get('elastic_port');
+        check("curl -XGET -u {$elasticUsername}:{$elasticPassword} '{$elasticHostname}:{$elasticPort}/?pretty'", ['elasticsearch']);
     }
 
     ////////////////////////////////////////////////////////////////////////////

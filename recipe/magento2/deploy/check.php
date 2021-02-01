@@ -93,11 +93,17 @@ task('magento2:deploy:check', function () {
     ////////////////////////////////////////////////////////////////////////////
     if ($magentoVersion === '2.4') {
         write("Elasticsearch:");
-        $elasticHostname = get('elastic_host');
-        $elasticUsername = get('elastic_user');
-        $elasticPassword = get('elastic_pass');
-        $elasticPort = get('elastic_port');
-        check("curl -XGET -u {$elasticUsername}:{$elasticPassword} '{$elasticHostname}:{$elasticPort}/?pretty' | grep cluster_name ", ['elasticsearch']);
+        if (has('elasticsearch_host')) {
+            $elasticHostname = get('elasticsearch_host');
+            $elasticUsername = get('elasticsearch_user');
+            $elasticPassword = get('elasticsearch_pass');
+            $elasticPort = get('elasticsearch_port');
+            check("curl -XGET -u {$elasticUsername}:{$elasticPassword} '{$elasticHostname}:{$elasticPort}/?pretty' | grep cluster_name ", ['elasticsearch']);
+        } else {
+            $elasticHostname = 'localhost';
+            $elasticPort = 9200;
+            check("curl -XGET '{$elasticHostname}:{$elasticPort}/?pretty' | grep cluster_name ", ['elasticsearch']);
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////

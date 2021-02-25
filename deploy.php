@@ -20,7 +20,8 @@ set('writable_use_sudo', true);
 set('port', 22);
 set('ssh_type', 'native');
 set('forwardAgent', true);
-set('multiplexing', true);
+// set('multiplexing', true);
+set('ssh_multiplexing', true);
 
 set('add_sample_data', false);
 set('mysql_host', '127.0.0.1');

@@ -60,11 +60,11 @@
   use-rewrites: 1
 
 ##################################
-#  Abstract host provider settings
+#  Abstract hostname provider settings
 ##################################
 
 .swissupdemo: &swissupdemo
-  host: swissupdemo.com
+  hostname: swissupdemo.com
   user: ec2-user
   port: 22
   identityFile: ~/.ssh/key.pem

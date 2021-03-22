@@ -159,11 +159,12 @@ task('magento2:deploy:check', function () {
 })->setPrivate();
 
 task('magento2:installed:check', function () {
-
-    $exist = test("[ -f {{current_path}}/bin/magento ]");
+    $exist = test("[ -f {{deploy_path}}/current/bin/magento ]");
     if (!$exist) {
         throw new GracefulShutdownException(
             "The script requires already installed \"Magento 2\"."
         );
     }
-})->setPrivate();
+})
+->setPrivate()
+;

@@ -5,9 +5,9 @@ namespace Deployer;
 require_once CUSTOM_RECIPE_DIR . '/bin/sudo.php';
 
 set('database_name_prefix', function () {
-    return 'database' . hash('crc32', get('hostname'));
+    return 'database' . hash('crc32', get('servername'));
     // return 'db';
-    // return 'db_' . preg_replace("/[^A-Za-z0-9 ]/", '_', get('hostname')) . '_';
+    // return 'db_' . preg_replace("/[^A-Za-z0-9 ]/", '_', get('servername')) . '_';
 });
 
 desc('Show path to current release');
@@ -183,7 +183,7 @@ set('database_name', function () {
 });
 
 set('admin_password', function () {
-    return md5(get('deploy_path') . hash('sha256', get('hostname')));
+    return md5(get('deploy_path') . hash('sha256', get('servername')));
     // return get('database_name');
 });
 

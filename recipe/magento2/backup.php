@@ -104,11 +104,11 @@ task('magento2:backup:rollback', function () {
 
 desc('Add backup cronjob');
 task('magento2:backup:rollback:cronjob', function () {
-    $cronJobKey = hash('crc32', get('hostname')) . '_CRON_JOBS_FROM_DEPLOYMENT';
+    $cronJobKey = hash('crc32', get('servername')) . '_CRON_JOBS_FROM_DEPLOYMENT';
 
     //delete all cronjobs with unique key
     $resetCronJobsFromDeployment = sprintf('crontab -l | grep -v "%s" | crontab -', $cronJobKey);
-    writeln('Resetting crontab list using key: ' . $cronJobKey . ' (' . get('hostname') . ')');
+    writeln('Resetting crontab list using key: ' . $cronJobKey . ' (' . get('servername') . ')');
     run($resetCronJobsFromDeployment);
 
     //add cronjob with unique key

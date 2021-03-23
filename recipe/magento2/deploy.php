@@ -53,10 +53,9 @@ task('magento2:setup:install', function () {
     $tag = get('magento2_current_tag');
     $magentoVersion = substr_replace($tag, '', -2);
     if ($magentoVersion === '2.4') {
-
         $elasticHost = $elasticUser = $elasticPass = $elasticPort = false;
 
-        if(has('elasticsearch_host')) {
+        if (has('elasticsearch_host')) {
             $elasticHost = get('elasticsearch_host');
             $elasticUser = get('elasticsearch_user');
             $elasticPass = get('elasticsearch_pass');
@@ -140,8 +139,8 @@ task('magento2:composer:dump-autoload', function () {
 
 task('magento2:rm-outdated', function () {
     run("cd {{release_path}} && {{bin/sudo}} rm -rf pub/static/_requirejs var/view_preprocessed pub/static/frontend/ pub/static/adminhtml/ generated/code/ generated/metadata/");
-
-})->setPrivate();
+})
+->setPrivate();
 
 task('magento2:setup:static-content:deploy', function () {
     // $locale = 'en_US';
@@ -162,11 +161,11 @@ task('magento2:cache:clean', function () {
 
 // desc('Add clean cache cronjob');
 // task('magento2:cache:clean:cronjob', function () {
-//     $cronJobKey = hash('crc32', get('hostname')) . '_CRON_JOBS_CACHE_CLEAN';
+//     $cronJobKey = hash('crc32', get('servername')) . '_CRON_JOBS_CACHE_CLEAN';
 
 //     //delete all cronjobs with unique key
 //     $resetCronJobsFromDeployment = sprintf('crontab -l | grep -v "%s" | crontab -', $cronJobKey);
-//     writeln('Resetting crontab list using key: ' . $cronJobKey . ' (' . get('hostname') . ')');
+//     writeln('Resetting crontab list using key: ' . $cronJobKey . ' (' . get('servername') . ')');
 //     run($resetCronJobsFromDeployment);
 
 //     $cronjob = parse("{{bin/magerun2}} cache:clean --quiet --root-dir={{deploy_path}}/current");

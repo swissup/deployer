@@ -5,7 +5,7 @@ namespace Deployer;
 desc('Add .htaccess for redirect to /current');
 task('magento2:deploy:apache:prepare', function () {
 
-    // if (get('hostname') === get('host')) {
+    // if (get('servername') === get('host')) {
     //     return;
     // }
     $rewriteBase = basename(get('deploy_path'));

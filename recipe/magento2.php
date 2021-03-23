@@ -118,6 +118,8 @@ task('magento2:init', [
 
 fail('magento2:init', 'magento2:init:failed');
 
+// task('magento2:drop', ['releases:remove:all']);
+
 desc('Deploy magento2');
 task('magento2:deploy', [
     'deploy:info',

@@ -142,7 +142,7 @@ Now you will be able to serve your project.
 #### Clear all
 
 ~~~bash
-➜ dep releases:remove:all [hostname]
+➜ dep releases:remove:all [servername]
 ~~~
 
 ### Remote server system requirements

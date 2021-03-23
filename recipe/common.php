@@ -23,6 +23,7 @@ task('test', function () {
     // writeln(run('cd {{release_path}} && {{bin/magento}} --version'));
      // writeln(get('httpuser'));
      print_r(get('servername'));
+     print_r(get('base_url'));
      // print_r(get('shared_dirs'));
      // writeln(get('hostname'));
      // writeln(get('admin_password'));

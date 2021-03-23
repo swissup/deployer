@@ -89,8 +89,8 @@
 #  stage: production
 #  mysql_db: main
 #  deploy_path: /var/www/html
-##  base_url: http://{{hostname}}/releases/{{release}}
-#  base_url: https://{{hostname}}/
+##  base_url: http://{{servername}}/releases/{{release}}
+#  base_url: https://{{servername}}/
 
 swissupdemo.com/test:
   <<: *swissupdemo
@@ -100,5 +100,5 @@ swissupdemo.com/test:
   stage: staging
   mysql_db: test
   deploy_path: /var/www/html/test
-  base_url: http://{{hostname}}/current
+  base_url: http://{{servername}}/current
   add_sample_data: true

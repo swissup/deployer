@@ -156,7 +156,9 @@ task('magento2:deploy:check', function () {
     foreach ($phpModules as $phpModule) {
         check("{{bin/php}} -m | awk '{print tolower($0)}' | grep {$phpModule}", [$phpModule]);
     }
-})->setPrivate();
+})
+->setPrivate()
+;
 
 task('magento2:installed:check', function () {
     $exist = test("[ -f {{deploy_path}}/current/bin/magento ]");
@@ -168,3 +170,7 @@ task('magento2:installed:check', function () {
 })
 ->setPrivate()
 ;
+
+task('magento2:reqs:check', [
+    'magento2:deploy:check'
+]);

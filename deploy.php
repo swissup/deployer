@@ -29,4 +29,8 @@ set('mysql_db', false);
 set('packages', false);
 set('tag', false);
 
+set('servername', function () {
+    return Task\Context::get()->getHost()->getHostname();
+});
+
 inventory('hosts.yml');

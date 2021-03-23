@@ -20,10 +20,10 @@ set('owner', function () {
 });
 
 task('test', function () {
-    writeln(run('cd {{release_path}} && {{bin/magento}} --version'));
+    // writeln(run('cd {{release_path}} && {{bin/magento}} --version'));
      // writeln(get('httpuser'));
-     print_r(get('shared_dirs'));
-     // print_r(get('option_packages'));
+     print_r(get('servername'));
+     // print_r(get('shared_dirs'));
      // writeln(get('hostname'));
      // writeln(get('admin_password'));
      // writeln(get('database_name_prefix'));
